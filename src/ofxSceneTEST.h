@@ -283,121 +283,6 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	enum LAYER_Type
-	{
-		LAYER_BACKGROUND,
-		LAYER_LETTERS,
-		LAYER_IMAGE,
-		LAYER_VIDEO
-	};
-
-	//--------------------------------------------------------------
-	void drawLayer(int layerType)
-	{
-		switch (layerType)
-		{
-			//-----------------
-		case LAYER_BACKGROUND:
-		{
-			ofPushMatrix();
-
-			int xHalf, yHalf;
-			//xHalf = ofGetWidth()*0.5;
-			//yHalf = ofGetHeight()*0.5;
-			xHalf = myBackground.getWidth();
-			yHalf = myBackground.getHeight();
-
-			ofTranslate(xHalf, yHalf);
-			//fade zoom
-			int timer = 600;
-			int frame = ofGetFrameNum() % timer;
-			float s = ofMap(frame, 0, timer, 1.0, 1.25f);
-			ofScale(s);
-			//draw
-			myBackground.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
-
-			ofPopMatrix();
-		}
-		break;
-
-			//-----------------
-		case LAYER_LETTERS:
-		{
-			string str1 = "TEST\nofxFbo\nMixerBlend";
-			string str2 = "FBO\nMIXER\nBLENDER";
-			x = 250;
-			y = 200;
-
-			if (ENABLE_randomizeColors)
-			{
-				int timer2 = 120;
-				int frame2 = ofGetFrameNum() % timer2;
-				if (frame2 == 0)//randomize the 2 colors every timer2 (120) frames
-				{
-					c1 = ofColor(ofRandom(255), ofRandom(255), ofRandom(255), 255);
-					c2 = ofColor(ofRandom(255), ofRandom(255), ofRandom(255), 255);
-				}
-			}
-
-			ofPushStyle();
-
-			//1st line
-			if (ENABLE_BW)
-				ofSetColor(cBlack);
-			else
-				ofSetColor(c1);
-			font.drawString(str1, x, y);
-
-			//2nd line
-			if (ENABLE_BW)
-				ofSetColor(cWhite);
-			else
-				ofSetColor(c2);
-
-			font.drawString(str2, x, y + 3 * size + 10);
-
-			ofPopStyle();
-		}
-		break;
-
-			//-----------------
-		case LAYER_IMAGE:
-		{
-			ofPushMatrix();
-
-			int xHalf, yHalf;
-			//xHalf = ofGetWidth()*0.5;
-			//yHalf = ofGetHeight()*0.5;
-			xHalf = image.getWidth()*0.5;
-			yHalf = image.getHeight()*0.5;
-
-			ofTranslate(xHalf, yHalf);
-			//fade zoom
-			int timer = 200;
-			int frame = ofGetFrameNum() % timer;
-			float s = ofMap(frame, 0, timer, 1.0, 1.2f);
-			ofScale(s);
-			//draw
-			image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
-
-			ofPopMatrix();
-		}
-		break;
-
-			//-----------------
-		case LAYER_VIDEO:
-		{
-			drawVideo();
-		}
-		break;
-
-			//-----------------
-		default:
-			break;
-		}
-	}
-
-	//--------------------------------------------------------------
 	void drawChannel1()
 	{
 		//background
@@ -579,5 +464,120 @@ public:
 	}
 #endif
 
+	//scene design
+	//--------------------------------------------------------------
+	enum LAYER_Type
+	{
+		LAYER_BACKGROUND,
+		LAYER_LETTERS,
+		LAYER_IMAGE,
+		LAYER_VIDEO
+	};
+
+	//--------------------------------------------------------------
+	void drawLayer(int layerType)
+	{
+		switch (layerType)
+		{
+			//-----------------
+		case LAYER_BACKGROUND:
+		{
+			ofPushMatrix();
+
+			int xHalf, yHalf;
+			//xHalf = ofGetWidth()*0.5;
+			//yHalf = ofGetHeight()*0.5;
+			xHalf = myBackground.getWidth();
+			yHalf = myBackground.getHeight();
+
+			ofTranslate(xHalf, yHalf);
+			//fade zoom
+			int timer = 600;
+			int frame = ofGetFrameNum() % timer;
+			float s = ofMap(frame, 0, timer, 1.0, 1.25f);
+			ofScale(s);
+			//draw
+			myBackground.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
+
+			ofPopMatrix();
+		}
+		break;
+
+		//-----------------
+		case LAYER_LETTERS:
+		{
+			string str1 = "TEST\nofxFbo\nMixerBlend";
+			string str2 = "FBO\nMIXER\nBLENDER";
+			x = 250;
+			y = 200;
+
+			if (ENABLE_randomizeColors)
+			{
+				int timer2 = 120;
+				int frame2 = ofGetFrameNum() % timer2;
+				if (frame2 == 0)//randomize the 2 colors every timer2 (120) frames
+				{
+					c1 = ofColor(ofRandom(255), ofRandom(255), ofRandom(255), 255);
+					c2 = ofColor(ofRandom(255), ofRandom(255), ofRandom(255), 255);
+				}
+			}
+
+			ofPushStyle();
+
+			//1st line
+			if (ENABLE_BW)
+				ofSetColor(cBlack);
+			else
+				ofSetColor(c1);
+			font.drawString(str1, x, y);
+
+			//2nd line
+			if (ENABLE_BW)
+				ofSetColor(cWhite);
+			else
+				ofSetColor(c2);
+
+			font.drawString(str2, x, y + 3 * size + 10);
+
+			ofPopStyle();
+		}
+		break;
+
+		//-----------------
+		case LAYER_IMAGE:
+		{
+			ofPushMatrix();
+
+			int xHalf, yHalf;
+			//xHalf = ofGetWidth()*0.5;
+			//yHalf = ofGetHeight()*0.5;
+			xHalf = image.getWidth()*0.5;
+			yHalf = image.getHeight()*0.5;
+
+			ofTranslate(xHalf, yHalf);
+			//fade zoom
+			int timer = 200;
+			int frame = ofGetFrameNum() % timer;
+			float s = ofMap(frame, 0, timer, 1.0, 1.2f);
+			ofScale(s);
+			//draw
+			image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
+
+			ofPopMatrix();
+		}
+		break;
+
+		//-----------------
+		case LAYER_VIDEO:
+		{
+			drawVideo();
+		}
+		break;
+
+		//-----------------
+		default:
+			break;
+		}
+	}
 };
 
