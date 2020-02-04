@@ -249,28 +249,32 @@ public:
 		{
 			ofLogVerbose("ofxSceneTEST") << "called draw";
 
-			//text
-			if (ENABLE_Letters_1)
+			//in text mode 
+			if (ENABLE_Letters_1 || ENABLE_Letters_2)
 			{
 				//debug the 2 original colors (without blending)
 				//draw 2 circles filled by colors 1 and 2
-				int r = 40;
 				ofPushStyle();
 				ofFill();
+				int r = 25;
 
 				//1st line
 				if (ENABLE_BW)
 					ofSetColor(cBlack);
 				else
 					ofSetColor(c1);
-				ofDrawCircle(x - 3 * r, y, r);
+
+				//ofDrawCircle(x - 3 * r, y, r);
+				ofDrawCircle(2 * r, 2 * r, r);
 
 				//2nd line
 				if (ENABLE_BW)
 					ofSetColor(cWhite);
 				else
 					ofSetColor(c2);
-				ofDrawCircle(x - 3 * r, (y + 3 * size + 10), r);
+
+				//ofDrawCircle(x - 3 * r, (y + 3 * size + 10), r);
+				ofDrawCircle(2 * r, 2*(2 * r + 10), r);
 
 				ofPopStyle();
 			}
@@ -508,9 +512,10 @@ public:
 		{
 			string str1 = "TEST\nofxFbo\nMixerBlend";
 			string str2 = "FBO\nMIXER\nBLENDER";
-			x = 250;
-			y = 200;
+			x = -900;
+			y = -200;
 
+			//timer randomize colors
 			if (ENABLE_randomizeColors)
 			{
 				int timer2 = 120;
@@ -522,8 +527,23 @@ public:
 				}
 			}
 
+			//two text lines
 			ofPushStyle();
+			ofPushMatrix();
 
+			int xHalf, yHalf;
+			xHalf = ofGetWidth()*0.5;
+			yHalf = ofGetHeight()*0.5;
+			ofTranslate(xHalf, yHalf);
+
+			//fade zoom
+			int timer = 60;
+			int frame = ofGetFrameNum() % timer;
+			float s = ofMap(frame, 0, timer, 1.0, 0.95f);
+			ofScale(s);
+
+			//draw
+			
 			//1st line
 			if (ENABLE_BW)
 				ofSetColor(cBlack);
@@ -539,6 +559,7 @@ public:
 
 			font.drawString(str2, x, y + 3 * size + 10);
 
+			ofPopMatrix();
 			ofPopStyle();
 		}
 		break;
