@@ -29,14 +29,20 @@ There are some key commands in the example:
 ## Usage
 
 .h
+
 #include "ofxSceneTEST.h"
+
 ofxSceneTEST scene;
 
 .cpp
+
 scene.drawChannel1();//draw 1st layer
+
 scene.drawChannel2();//draw 2nd layer
 
-//shor keys
+//short keys
+
 scene.setGuiVisible(!scene.getGuiVisible());
-scene.setModeColorsToggle();
+
+scene.setModeColorsToggle();\n
 scene.setModeRandomizeToggle();
