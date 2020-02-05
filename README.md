@@ -44,8 +44,8 @@ ofxSceneTEST scene;
 scene.drawChannel1();//draw 1st layer
 scene.drawChannel2();//draw 2nd layer
 
-//short keys
+//control by code
 scene.setGuiVisible(!scene.getGuiVisible());
-scene.setModeColorsToggle();\n
+scene.setModeColorsToggle();
 scene.setModeRandomizeToggle();
 ```
