@@ -7,7 +7,7 @@
 
 #include "ofxGui.h"
 
-#define INCLUDE_HAP
+//#define INCLUDE_HAP
 #ifdef INCLUDE_HAP
 #include "ofxHapPlayer.h"
 #endif
@@ -55,13 +55,17 @@ public:
 	ofParameter<bool> ENABLE_Background_1;
 	ofParameter<bool> ENABLE_Letters_1;
 	ofParameter<bool> ENABLE_Image_1;
+#ifdef INCLUDE_HAP
 	ofParameter<bool> ENABLE_Video_1;
+#endif
 
 	ofParameterGroup params_Channel2{ "CHANNEL 2" };
 	ofParameter<bool> ENABLE_Background_2;
 	ofParameter<bool> ENABLE_Letters_2;
 	ofParameter<bool> ENABLE_Image_2;
+#ifdef INCLUDE_HAP
 	ofParameter<bool> ENABLE_Video_2;
+#endif
 
 
 	string path_Params;
@@ -119,15 +123,15 @@ public:
 
 		//-
 
-		//theme
-		string str = "fonts/overpass-mono-bold.otf";
-		ofxGuiSetFont(GLOBAL_Path + str, 9);
-		ofxGuiSetDefaultHeight(20);
-		ofxGuiSetBorderColor(32);
-		ofxGuiSetFillColor(ofColor(48));
-		ofxGuiSetTextColor(ofColor::white);
-		ofxGuiSetHeaderColor(ofColor(24));
-		//ofxGuiSetBackgroundColor(ofColor::black);
+		////theme
+		//string str = "fonts/overpass-mono-bold.otf";
+		//ofxGuiSetFont(GLOBAL_Path + str, 9);
+		//ofxGuiSetDefaultHeight(20);
+		//ofxGuiSetBorderColor(32);
+		//ofxGuiSetFillColor(ofColor(48));
+		//ofxGuiSetTextColor(ofColor::white);
+		//ofxGuiSetHeaderColor(ofColor(24));
+		////ofxGuiSetBackgroundColor(ofColor::black);
 
 		//-
 
@@ -342,6 +346,19 @@ public:
 		{
 			drawLayer(LAYER_LETTERS);
 		}
+	}
+	
+	//--------------------------------------------------------------
+	void setModeColorsToggle()
+	{
+		ENABLE_BW = !ENABLE_BW;
+		ENABLE_BW = !ENABLE_Colors;
+	}
+	
+	//--------------------------------------------------------------
+	void setModeRandomizeToggle()
+	{
+		ENABLE_randomizeColors = !ENABLE_randomizeColors;
 	}
 
 	//--------------------------------------------------------------
@@ -588,12 +605,14 @@ public:
 		}
 		break;
 
+#ifdef INCLUDE_HAP
 		//-----------------
 		case LAYER_VIDEO:
 		{
 			drawVideo();
 		}
 		break;
+#endif
 
 		//-----------------
 		default:
