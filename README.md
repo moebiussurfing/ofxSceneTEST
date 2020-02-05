@@ -8,16 +8,16 @@ https://github.com/moebiussurfing/ofxGpuMixer/tree/simplified/example2
 
 
 ## Description
-This helper addon easily draws a scene with two independent layers of these enabled or disabled 'draw types':
+This helper addon easily draws a scene with two independent 'channels/layers' with these enabled or disabled 'draw object types':
 
 - image 1 (background)
 - image 2 (image)
-- letters (text) Using two selectable colors or black-and-white mode.
+- letters (text) Using two text groups with two selectable-colors or black-and-white mode.
 - video (requires ofxHapPlayer and add #define INCLUDE_HAP and the addon)
 
-*The addon does not make any layer blending.* 
+*The addon does not make any layer blending. I made it to help to debug a layer blending addon easily* 
 
-The screenshot it's an app made with the https://github.com/jonasfehr/ofxGpuMixer addon from Jonas Fehr.
+The screenshot's an ofApp made with the https://github.com/jonasfehr/ofxGpuMixer addon from Jonas Fehr.
 
 There are some key commands in the example:
 
@@ -28,8 +28,9 @@ There are some key commands in the example:
 
 ## Features
 
-- gui to change settings.
-- auto save/load settings.
+- slow animate zoom of the object types to create 'move flow'.
+- GUI to change settings.
+- autosave/load settings.
 
 
 ## Usage
