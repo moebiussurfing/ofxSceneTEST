@@ -17,7 +17,7 @@ This helper addon easily draws a scene with two independent layers of these enab
 
 *The addon does not make any layer blending.* 
 
-The screenshot it's an app made with the https://github.com/jonasfehr/ofxGpuMixer from Jonas Fehr.
+The screenshot it's an app made with the https://github.com/jonasfehr/ofxGpuMixer addon from Jonas Fehr.
 
 There are some key commands in the example:
 
