@@ -393,7 +393,7 @@ public:
                 DISABLE_Callbacks = true;//too avoid crashes
                 ENABLE_BW = !ENABLE_Colors;
                 updateGui();
-                DISABLE_Callbacks = false
+                DISABLE_Callbacks = false;
             }
             else if (name == "MODE BW")
             {
