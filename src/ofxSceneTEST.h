@@ -19,7 +19,7 @@ public:
     ofxHapPlayer player;
 #endif
 
-    //scene
+    //gui
     ofxPanel gui;
     ofParameter<glm::vec2> Gui_Position;
 
@@ -52,8 +52,6 @@ public:
 
     ofParameterGroup params_SOURCES{ "SOURCES" };
 
-    //TODO:
-    //enable elements in both channels
     ofParameterGroup params_Channel1{ "CHANNEL 1" };
     ofParameter<bool> ENABLE_Background_1;
     ofParameter<bool> ENABLE_Letters_1;
@@ -158,9 +156,8 @@ public:
         string pathImg = GLOBAL_Path + "background3.jpg";;
         image.load(pathImg);
 
-
-#ifdef INCLUDE_HAP
         //video hap
+#ifdef INCLUDE_HAP
         loadVideo("movies/SampleHap.mov");
         player.setLoopState(OF_LOOP_NORMAL);
 #endif
@@ -525,12 +522,10 @@ public:
                 ofPushMatrix();
 
                 int xHalf, yHalf;
-                //xHalf = ofGetWidth()*0.5;
-                //yHalf = ofGetHeight()*0.5;
                 xHalf = myBackground.getWidth();
                 yHalf = myBackground.getHeight();
-
                 ofTranslate(xHalf, yHalf);
+
                 //fade zoom
                 int timer = 600;
                 int frame = ofGetFrameNum() % timer;
@@ -546,8 +541,6 @@ public:
                 //-----------------
             case LAYER_LETTERS:
             {
-                x = -450;
-                y = -200;
                 string str1 = "TEST\nofxFbo\nMixerBlend";
                 string str2 = "FBO\nMIXER\nBLENDER";
 
@@ -579,6 +572,8 @@ public:
                 ofScale(s);
 
                 //draw
+                x = -xHalf + 250;
+                y = -yHalf + 250;
 
                 //1st line
                 if (ENABLE_BW)
@@ -607,8 +602,6 @@ public:
                 ofPushMatrix();
 
                 int xHalf, yHalf;
-                //xHalf = ofGetWidth()*0.5;
-                //yHalf = ofGetHeight()*0.5;
                 xHalf = image.getWidth()*0.5;
                 yHalf = image.getHeight()*0.5;
                 ofTranslate(xHalf, yHalf);
