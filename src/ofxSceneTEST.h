@@ -40,6 +40,7 @@ public:
 
     ofParameterGroup params{ "SCENE" };
 
+	ofParameterGroup params_Letters{ "LETTERS" };
     ofParameterGroup params_Colors{ "COLORS" };
     ofParameter<ofColor> c1, c2;
     ofParameter<bool> ENABLE_randomizeColors;
@@ -211,8 +212,9 @@ public:
         //all groups
         params.add(ENABLE_Colors);
         params.add(ENABLE_BW);
-        params.add(params_Colors);
-        params.add(params_BW);
+        params_Letters.add(params_Colors);
+		params_Letters.add(params_BW);
+		params.add(params_Letters);
         params.add(params_SOURCES);
 
         ofAddListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
@@ -424,9 +426,10 @@ public:
     void updateGui()
     {
         //collapse groups
-        auto &g0 = gui.getGroup("SCENE");//1st level
-        auto &g11 = g0.getGroup("BW");//2nd level
-        auto &g12 = g0.getGroup("COLORS");//2nd level
+		auto &g0 = gui.getGroup("SCENE");//1st level
+		auto &g1 = g0.getGroup("LETTERS");//1st level
+		auto &g11 = g1.getGroup("BW");//2nd level
+        auto &g12 = g1.getGroup("COLORS");//2nd level
         g11.minimize();
         g12.minimize();
 
