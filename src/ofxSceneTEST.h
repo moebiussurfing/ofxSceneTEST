@@ -4,7 +4,7 @@
 
 #include "ofxGui.h"
 
-//#define INCLUDE_HAP
+#define INCLUDE_HAP
 #ifdef INCLUDE_HAP
 #include "ofxHapPlayer.h"
 #endif
