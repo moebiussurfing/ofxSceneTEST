@@ -375,51 +375,54 @@ public:
     //--------------------------------------------------------------
     void Changed_params(ofAbstractParameter &e)
     {
-        string name = e.getName();
+		if (!DISABLE_Callbacks)
+		{
+			string name = e.getName();
 
-        //exclude debugs
-        if (name != "exclude"
-            && name != "exclude"
-            && name != "RANDOMIZER"
-            && (!DISABLE_Callbacks)//disable callback
-            )
-        {
-            ofLogNotice("ofxSceneTEST") << "Changed_params: " << name << " : " << e;
+			//exclude debugs
+			if (name != "exclude"
+				&& name != "exclude"
+				&& name != "RANDOMIZER"
+				&& (!DISABLE_Callbacks)//disable callback
+				)
+			{
+				ofLogNotice("ofxSceneTEST") << "Changed_params: " << name << " : " << e;
 
-            //filter
-            if (name == "MODE COLORS")
-            {
-                DISABLE_Callbacks = true;//too avoid crashes
-                ENABLE_BW = !ENABLE_Colors;
-                updateGui();
-                DISABLE_Callbacks = false;
-            }
-            else if (name == "MODE BW")
-            {
-                DISABLE_Callbacks = true;
-                ENABLE_Colors = !ENABLE_BW;
-                updateGui();
-                DISABLE_Callbacks = false;
-            }
-            else if (name == "RESET")
-            {
-                if (RESET_BW)
-                {
-                    DISABLE_Callbacks = true;
-                    RESET_BW = false;
-                    cBlack = ofColor(0, 255);
-                    cWhite = ofColor(255, 255);
-                    DISABLE_Callbacks = false;
-                }
-            }
+				//filter
+				if (name == "MODE COLORS")
+				{
+					DISABLE_Callbacks = true;//too avoid crashes
+					ENABLE_BW = !ENABLE_Colors;
+					updateGui();
+					DISABLE_Callbacks = false;
+				}
+				else if (name == "MODE BW")
+				{
+					DISABLE_Callbacks = true;
+					ENABLE_Colors = !ENABLE_BW;
+					updateGui();
+					DISABLE_Callbacks = false;
+				}
+				else if (name == "RESET")
+				{
+					if (RESET_BW)
+					{
+						DISABLE_Callbacks = true;
+						RESET_BW = false;
+						cBlack = ofColor(0, 255);
+						cWhite = ofColor(255, 255);
+						DISABLE_Callbacks = false;
+					}
+				}
 
-            //-
+				//-
 
-            ////workflow
-            //if (!ENABLE_BW && !ENABLE_Colors)
-            //	ENABLE_Colors = true;//default
-            //updateGui();
-        }
+				////workflow
+				//if (!ENABLE_BW && !ENABLE_Colors)
+				//	ENABLE_Colors = true;//default
+				//updateGui();
+			}
+		}
     }
 
     //--------------------------------------------------------------
