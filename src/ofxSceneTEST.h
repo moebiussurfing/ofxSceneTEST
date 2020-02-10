@@ -216,8 +216,9 @@ public:
 		params_Letters.add(ENABLE_BW);
 		params_Letters.add(params_Colors);
 		params_Letters.add(params_BW);
-		params.add(params_Letters);
+
 		params.add(params_SOURCES);
+		params.add(params_Letters);
 
 		ofAddListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
 
