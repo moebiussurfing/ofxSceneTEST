@@ -267,14 +267,24 @@ public:
 			//in text mode
 			if (ENABLE_Letters_1 || ENABLE_Letters_2)
 			{
+				int r = 20;
+				int x, y;
+				
+				//left to the gui
+				//x = Gui_Position->x - r -10;
+				//y = Gui_Position->y + 2 * r + 125;
+
+				//below the gui
+				int xPad = 20;
+				int yPad = 10;
+				ofRectangle wr = gui.getShape();
+				x = wr.getBottomLeft().x + r + xPad;
+				y = wr.getBottomLeft().y + r + yPad;
+				
 				//debug the 2 original colors (without blending)
 				//draw 2 circles filled by colors 1 and 2
 				ofPushStyle();
 				ofFill();
-				int r = 20;
-				int x, y;
-				x = Gui_Position->x - r -10;
-				y = Gui_Position->y + 2 * r + 100;
 
 				//1st line
 				if (ENABLE_BW)
@@ -290,7 +300,8 @@ public:
 				else
 					ofSetColor(c2);
 
-				ofDrawCircle(x, y + 2 * r + 10, r);
+				//ofDrawCircle(x, y + 2.2f * r, r);//vertical aligned
+				ofDrawCircle(x + 2.2f * r, y, r);//horizontal aligned
 
 				ofPopStyle();
 			}
@@ -420,7 +431,7 @@ public:
 
 				//-
 
-				////workflow
+				////whorkflow
 				//if (!ENABLE_BW && !ENABLE_Colors)
 				//	ENABLE_Colors = true;//default
 				//updateGui();
