@@ -161,7 +161,7 @@ public:
 
 		//video hap
 #ifdef INCLUDE_HAP
-		loadVideo("movies/SampleHap.mov");
+		loadVideo(GLOBAL_Path+"movies/SampleHap.mov");
 		player.setLoopState(OF_LOOP_NORMAL);
 #endif
 
@@ -191,23 +191,23 @@ public:
 		ENABLE_Letters_1.set("LETTERS", true);
 		ENABLE_Image_1.set("IMAGE", false);
 		params_Channel1.add(ENABLE_Background_1);
-		params_Channel1.add(ENABLE_Letters_1);
 		params_Channel1.add(ENABLE_Image_1);
 #ifdef INCLUDE_HAP
 		ENABLE_Video_1.set("VIDEO", false);
 		params_Channel1.add(ENABLE_Video_1);
 #endif
+		params_Channel1.add(ENABLE_Letters_1);
 		params_SOURCES.add(params_Channel1);
 
 		ENABLE_Background_2.set("BACKGROUND", true);
 		ENABLE_Letters_2.set("LETTERS", true);
 		ENABLE_Image_2.set("IMAGE", false);
 		params_Channel2.add(ENABLE_Background_2);
-		params_Channel2.add(ENABLE_Letters_2);
 		params_Channel2.add(ENABLE_Image_2);
 #ifdef INCLUDE_HAP
 		ENABLE_Video_2.set("VIDEO", false);
 		params_Channel2.add(ENABLE_Video_2);
+		params_Channel2.add(ENABLE_Letters_2);
 #endif
 		params_SOURCES.add(params_Channel2);
 
@@ -308,7 +308,19 @@ public:
 			}
 
 			//--
+//--
 
+	////TEST: 
+	////ofApp background switcher to debug
+	//int timer = 60;
+	//int frame = ofGetFrameNum() % timer;
+	//bool b = ((frame < timer*0.5) ? true : false);
+	//if (b)
+	//	ofBackground(ofColor::yellow);
+	//else
+	//	ofBackground(ofColor::green);
+
+	//-
 			//scene
 			gui.draw();
 		}
@@ -560,6 +572,22 @@ public:
 			myBackground.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
 
 			ofPopMatrix();
+
+
+		// //TEST:
+		// //B. background switcher
+		// //TODO:
+		// int timer = 30;
+		// int frame = ofGetFrameNum() % timer;
+		// bool b = ((frame < timer*0.5) ? true : false);
+		// ofColor c;
+		// if (b)
+		// 	c.set(ofColor::red);
+		// else
+		// 	c.set(ofColor::green);
+		// ofClear(c.r, c.g, c.b, 255);//fbo works! 
+		// //effected letters draws fine into backgroundfboPOST
+		
 		}
 		break;
 
