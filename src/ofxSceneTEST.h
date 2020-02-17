@@ -87,6 +87,22 @@ public:
 		return SHOW_Gui.get();
 	}
 
+	void refreshGui()
+	{
+		gui.maximizeAll();
+		auto &gScn = gui.getGroup("SCENE");
+		auto &gSrc = gScn.getGroup("SOURCES");
+		auto &ch1 = gSrc.getGroup("CHANNEL 1");
+		auto &ch2 = gSrc.getGroup("CHANNEL 2");
+		//gSrc.minimize();
+		ch2.minimize();
+
+		auto &gLtr = gScn.getGroup("LETTERS");
+		auto &Col = gLtr.getGroup("COLORS");
+		auto &Bw = gLtr.getGroup("BW");
+		Bw.minimize();
+	}
+
 	//--------------------------------------------------------------
 	ofxSceneTEST()
 	{
@@ -128,9 +144,18 @@ public:
 
 		//-
 
-		//theme
-		string str = GLOBAL_Path + "fonts/overpass-mono-bold.otf";
-		ofxGuiSetFont(str, 9);
+		//ofxGui theme
+		string pathFontGui = GLOBAL_Path + "fonts/overpass-mono-bold.otf";
+		ofFile file(pathFontGui);
+		if (file.exists())
+		{
+			ofLogNotice("ofxSceneTEST") << "ofxGui theme: LOADED FONT FILE '" << pathFontGui << "'";
+			ofxGuiSetFont(pathFontGui, 9);
+		}
+		else
+		{
+			ofLogError("ofxSceneTEST") << "ofxGui theme: FONT FILE '" << pathFontGui << "' NOT FOUND!";
+		}
 		ofxGuiSetDefaultHeight(20);
 		ofxGuiSetBorderColor(32);
 		ofxGuiSetFillColor(ofColor(48));
@@ -141,13 +166,24 @@ public:
 
 		//layers
 
-		//font
+		//ttf font
 		string pathFont;
-		pathFont = "fonts/Sequel100Black116.ttf"; size = 80;
-		//pathFont = "fonts/DSPTRLSuper.ttf"; size = 90;
-		//pathFont = "fonts/overpass-mono-bold.otf";size = 100;
-		font.load(GLOBAL_Path + pathFont, size, true, true);
+		pathFont = GLOBAL_Path + "fonts/Sequel100Black116.ttf";
+		//pathFont = GLOBAL_Path + "fonts/DSPTRLSuper.ttf"; size = 90;
+		//pathFont = GLOBAL_Path + "fonts/overpass-mono-bold.otf";size = 100;
+		size = 80;
+		bool bLoaded = font.load(pathFont, size, true, true);
+		if (bLoaded)
+		{
+			ofLogNotice("ofxSceneTEST") << "ttf font: LOADED FONT FILE '" << pathFont << "'";
+		}
+		else
+		{
+			ofLogError("ofxSceneTEST") << "ttf font: FONT FILE '" << pathFont << "' NOT FOUND!";
+		}
 		font.setLineHeight(size + 5);
+
+		//-
 
 		//background
 		string pathBg;
@@ -161,7 +197,7 @@ public:
 
 		//video hap
 #ifdef INCLUDE_HAP
-		loadVideo(GLOBAL_Path+"movies/SampleHap.mov");
+		loadVideo(GLOBAL_Path + "movies/SampleHap.mov");
 		player.setLoopState(OF_LOOP_NORMAL);
 #endif
 
@@ -185,8 +221,7 @@ public:
 		params_BW.add(RESET_BW);
 		params_BW.add(cBlack);
 		params_BW.add(cWhite);
-
-
+		
 		ENABLE_Background_1.set("BACKGROUND", true);
 		ENABLE_Letters_1.set("LETTERS", true);
 		ENABLE_Image_1.set("IMAGE", false);
@@ -234,6 +269,7 @@ public:
 
 		//collapse
 		//gui.getGroup("SCENE").minimize();
+		refreshGui();
 
 		//--
 
@@ -270,7 +306,7 @@ public:
 			{
 				int r = 20;
 				int x, y;
-				
+
 				//left to the gui
 				//x = Gui_Position->x - r -10;
 				//y = Gui_Position->y + 2 * r + 125;
@@ -281,7 +317,7 @@ public:
 				ofRectangle wr = gui.getShape();
 				x = wr.getBottomLeft().x + r + xPad;
 				y = wr.getBottomLeft().y + r + yPad;
-				
+
 				//debug the 2 original colors (without blending)
 				//draw 2 circles filled by colors 1 and 2
 				ofPushStyle();
@@ -574,20 +610,20 @@ public:
 			ofPopMatrix();
 
 
-		// //TEST:
-		// //B. background switcher
-		// //TODO:
-		// int timer = 30;
-		// int frame = ofGetFrameNum() % timer;
-		// bool b = ((frame < timer*0.5) ? true : false);
-		// ofColor c;
-		// if (b)
-		// 	c.set(ofColor::red);
-		// else
-		// 	c.set(ofColor::green);
-		// ofClear(c.r, c.g, c.b, 255);//fbo works! 
-		// //effected letters draws fine into backgroundfboPOST
-		
+			// //TEST:
+			// //B. background switcher
+			// //TODO:
+			// int timer = 30;
+			// int frame = ofGetFrameNum() % timer;
+			// bool b = ((frame < timer*0.5) ? true : false);
+			// ofColor c;
+			// if (b)
+			// 	c.set(ofColor::red);
+			// else
+			// 	c.set(ofColor::green);
+			// ofClear(c.r, c.g, c.b, 255);//fbo works! 
+			// //effected letters draws fine into backgroundfboPOST
+
 		}
 		break;
 
