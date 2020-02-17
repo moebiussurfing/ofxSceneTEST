@@ -254,6 +254,7 @@ public:
 
 		params.add(params_SOURCES);
 		params.add(params_Letters);
+		params.add(SHOW_Gui);
 
 		ofAddListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
 
