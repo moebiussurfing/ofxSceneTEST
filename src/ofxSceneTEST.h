@@ -40,9 +40,11 @@ public:
 
 	ofParameterGroup params{ "SCENE" };
 
+	ofParameter<bool> ENABLE_BackgroundColor{ "GLOBAL BACKGROUND", false };
+
 	ofParameterGroup params_Letters{ "LETTERS" };
 	ofParameterGroup params_Colors{ "COLORS" };
-	ofParameter<ofColor> c1, c2;
+	ofParameter<ofColor> c1, c2, cBg;
 	ofParameter<bool> ENABLE_randomizeColors;
 	ofParameter<bool> ENABLE_Colors;
 
@@ -54,7 +56,8 @@ public:
 	ofParameterGroup params_SOURCES{ "SOURCES" };
 
 	ofParameterGroup params_Channel1{ "CHANNEL 1" };
-	ofParameter<bool> ENABLE_Background_1;
+	ofParameter<bool> ENABLE_ColorBackground_1;
+	ofParameter<bool> ENABLE_BackgroundImage_1;
 	ofParameter<bool> ENABLE_Letters_1;
 	ofParameter<bool> ENABLE_Image_1;
 #ifdef INCLUDE_HAP
@@ -62,7 +65,8 @@ public:
 #endif
 
 	ofParameterGroup params_Channel2{ "CHANNEL 2" };
-	ofParameter<bool> ENABLE_Background_2;
+	ofParameter<bool> ENABLE_ColorBackground_2;
+	ofParameter<bool> ENABLE_BackgroundImage_2;
 	ofParameter<bool> ENABLE_Letters_2;
 	ofParameter<bool> ENABLE_Image_2;
 #ifdef INCLUDE_HAP
@@ -101,7 +105,12 @@ public:
 		auto &Col = gLtr.getGroup("COLORS");
 		auto &Bw = gLtr.getGroup("BW");
 		Bw.minimize();
+		gLtr.minimize();
+
+		auto &gGuiPos = gScn.getGroup("GUI POSITION");
+		gGuiPos.minimize();
 	}
+
 
 	//--------------------------------------------------------------
 	ofxSceneTEST()
@@ -202,6 +211,7 @@ public:
 #endif
 
 		//-
+		cBg.set("BACKGROUND COLOR", ofColor(128, 255), ofColor(0, 0), ofColor(255, 255));
 
 		ENABLE_Colors.set("MODE COLORS", true);
 		ENABLE_randomizeColors.set("RANDOMIZER", true);
@@ -222,10 +232,13 @@ public:
 		params_BW.add(cBlack);
 		params_BW.add(cWhite);
 		
-		ENABLE_Background_1.set("BACKGROUND", true);
+		ENABLE_ColorBackground_1.set("COLOR BACKGROUND", true);
+		ENABLE_BackgroundImage_1.set("IMAGE BACKGROUND", true);
 		ENABLE_Letters_1.set("LETTERS", true);
 		ENABLE_Image_1.set("IMAGE", false);
-		params_Channel1.add(ENABLE_Background_1);
+		
+		params_Channel1.add(ENABLE_ColorBackground_1);
+		params_Channel1.add(ENABLE_BackgroundImage_1);
 		params_Channel1.add(ENABLE_Image_1);
 #ifdef INCLUDE_HAP
 		ENABLE_Video_1.set("VIDEO", false);
@@ -234,10 +247,13 @@ public:
 		params_Channel1.add(ENABLE_Letters_1);
 		params_SOURCES.add(params_Channel1);
 
-		ENABLE_Background_2.set("BACKGROUND", true);
+		ENABLE_ColorBackground_2.set("COLOR BACKGROUND", true);
+		ENABLE_BackgroundImage_2.set("IMAGE BACKGROUND", true);
 		ENABLE_Letters_2.set("LETTERS", true);
 		ENABLE_Image_2.set("IMAGE", false);
-		params_Channel2.add(ENABLE_Background_2);
+
+		params_Channel2.add(ENABLE_ColorBackground_2);
+		params_Channel2.add(ENABLE_BackgroundImage_2);
 		params_Channel2.add(ENABLE_Image_2);
 #ifdef INCLUDE_HAP
 		ENABLE_Video_2.set("VIDEO", false);
@@ -254,7 +270,17 @@ public:
 
 		params.add(params_SOURCES);
 		params.add(params_Letters);
+
+		params.add(ENABLE_BackgroundColor);
+		params.add(cBg);
+
 		params.add(SHOW_Gui);
+		Gui_Position.set("GUI POSITION",
+			glm::vec2(ofGetWidth()*0.5f, ofGetHeight()* 0.5f),
+			glm::vec2(0, 0),
+			glm::vec2(ofGetWidth(), ofGetHeight()));
+		Gui_Position = glm::vec2(ofGetWindowWidth() - 210, 5);
+		params.add(Gui_Position);
 
 		ofAddListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
 
@@ -265,7 +291,6 @@ public:
 		gui.add(params);
 
 		//default gui pos
-		Gui_Position = glm::vec2(ofGetWindowWidth() - 210, 5);
 		gui.setPosition(Gui_Position->x, Gui_Position->y);
 
 		//collapse
@@ -364,12 +389,34 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void drawChannel1()
+	void drawBackground()
 	{
-		//background
-		if (ENABLE_Background_1)
+		ofClear(cBg);
+	}
+
+	//--------------------------------------------------------------
+	void drawAll()
+	{
+		if (ENABLE_BackgroundColor)
+			drawBackground();
+		
+		drawChannel1();
+		drawChannel2();
+	}
+
+	//--------------------------------------------------------------
+	void drawChannel1()///to draw all layers
+	{
+		//background color 
+		if (ENABLE_ColorBackground_1)
 		{
-			drawLayer(LAYER_BACKGROUND);
+			drawLayer(LAYER_BACKGROUND_COLOR);
+		}
+
+		//background image
+		if (ENABLE_BackgroundImage_1)
+		{
+			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
 
 		//image
@@ -395,10 +442,22 @@ public:
 	//--------------------------------------------------------------
 	void drawChannel2()
 	{
-		//background
-		if (ENABLE_Background_2)
+		//background color 
+		if (ENABLE_ColorBackground_2)
 		{
-			drawLayer(LAYER_BACKGROUND);
+			drawLayer(LAYER_BACKGROUND_COLOR);
+		}
+
+		//color background image
+		if (ENABLE_BackgroundImage_1)
+		{
+			drawLayer(LAYER_BACKGROUND_IMAGE);
+		}
+
+		//image background
+		if (ENABLE_BackgroundImage_2)
+		{
+			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
 
 		//image
@@ -477,6 +536,14 @@ public:
 						cWhite = ofColor(255, 255);
 						DISABLE_Callbacks = false;
 					}
+				}
+				else if (name == "GUI POSITION")
+				{
+					Gui_Position = glm::vec2 ( 
+						MIN(Gui_Position.get().x, ofGetWidth() - 210),
+						MIN(Gui_Position.get().y, ofGetHeight() - 400));
+
+					gui.setPosition(Gui_Position->x, Gui_Position->y);
 				}
 
 				//-
@@ -575,7 +642,8 @@ public:
 	//--------------------------------------------------------------
 	enum LAYER_Type
 	{
-		LAYER_BACKGROUND,
+		LAYER_BACKGROUND_COLOR,
+		LAYER_BACKGROUND_IMAGE,
 		LAYER_LETTERS,
 		LAYER_IMAGE,
 		LAYER_VIDEO
@@ -591,7 +659,13 @@ public:
 		switch (layerType)
 		{
 			//-----------------
-		case LAYER_BACKGROUND:
+		case LAYER_BACKGROUND_COLOR:
+		{
+			drawBackground();
+		}
+		break;
+
+		case LAYER_BACKGROUND_IMAGE:
 		{
 			ofPushMatrix();
 
