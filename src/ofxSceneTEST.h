@@ -258,8 +258,8 @@ public:
 #ifdef INCLUDE_HAP
 		ENABLE_Video_2.set("VIDEO", false);
 		params_Channel2.add(ENABLE_Video_2);
-		params_Channel2.add(ENABLE_Letters_2);
 #endif
+		params_Channel2.add(ENABLE_Letters_2);
 		params_SOURCES.add(params_Channel2);
 
 		//all groups
@@ -449,7 +449,7 @@ public:
 		}
 
 		//color background image
-		if (ENABLE_BackgroundImage_1)
+		if (ENABLE_BackgroundImage_2)
 		{
 			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
