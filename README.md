@@ -2,13 +2,11 @@
 ## Screenshot
 ![Image](/sceenshot1.JPG?raw=true "example2")
 
-## Example
-https://github.com/moebiussurfing/ofxGpuMixer/tree/simplified/example2
-
 
 ## Description
-This helper addon easily draws a scene with two independent 'channels/layers' with these enabled or disabled 'draw object types':
+This helper addon easily draws an animated testing scene with two independent 'channels/layers' with these enabled or disabled 'draw object types':
 
+- background color
 - image 1 (background)
 - image 2 (image)
 - letters (text) Using two text groups with two selectable-colors or black-and-white mode.
@@ -16,7 +14,12 @@ This helper addon easily draws a scene with two independent 'channels/layers' wi
 
 *The addon does not make any layer blending. I made it to help to debug a layer blending addon easily* 
 
-The screenshot's an ofApp made with the https://github.com/jonasfehr/ofxGpuMixer addon from Jonas Fehr.
+
+## Features
+
+- slow animate zoom of the object types to create 'move-flow'.
+- GUI to change settings.
+- autosave/load settings.
 
 There are some key commands in the example:
 
@@ -25,12 +28,15 @@ There are some key commands in the example:
 - 'r': toggle timer randomizer of the two colors. 
 
 
-## Features
+## Why?
 
-- slow animate zoom of the object types to create 'move flow'.
-- GUI to change settings.
-- autosave/load settings.
+This add-on can be helpful when developing your own code/addon to forget about drawing stuff and start focusing on what you want: to code processing or layering of drawn layers.
 
+
+## Requires
+
+- ofxGui
+- included images, video and fonts into '/data/ofxSceneTEST'
 
 ## Usage
 
@@ -41,11 +47,26 @@ There are some key commands in the example:
 ofxSceneTEST scene;
 
 .cpp
+//independent layers
+scene.drawBackground();
 scene.drawChannel1();//draw 1st layer
 scene.drawChannel2();//draw 2nd layer
+
+//or
+scene.drawAll();//draw both layers without any blendind
 
 //control by code
 scene.setGuiVisible(!scene.getGuiVisible());
 scene.setModeColorsToggle();
 scene.setModeRandomizeToggle();
 ```
+
+
+## Tested systems
+- macOS
+- Windows
+
+
+## TODO:
+
+- add 3d objects to the scene.
