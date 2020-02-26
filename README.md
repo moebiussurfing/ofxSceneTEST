@@ -1,7 +1,6 @@
 
 ## Screenshot
-![Alt text](/sceenshot2.JPG?raw=true "example2")
-![Alt text](/screenshot.jpeg?raw=true "MoebiusSurfing")
+![Image](/sceenshot1.JPG?raw=true "example2")
 
 ## Example
 https://github.com/moebiussurfing/ofxGpuMixer/tree/simplified/example2
