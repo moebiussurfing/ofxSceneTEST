@@ -6,17 +6,17 @@
 
 ## can exclude some sttings files
 
-*.XML
-*.xml
-*.JSON
-*.json
+#*.XML
+#*.xml
+#*.JSON
+#*.json
 
 */bin/*
 !*/bin/data/
 
 # for bin folder in root
-/bin/*
-!/bin/data/
+#/bin/*
+#!/bin/data/
 
 ##-------------------------------
 
