@@ -1,13 +1,17 @@
 #pragma once
 
-#include "ofMain.h"
+//#include "addonDEFINES.h"
 
-#include "ofxGui.h"
-
-#define INCLUDE_HAP
+//#define INCLUDE_HAP
 #ifdef INCLUDE_HAP
 #include "ofxHapPlayer.h"
 #endif
+
+//--
+
+#include "ofMain.h"
+
+#include "ofxGui.h"
 
 class ofxSceneTEST : public ofBaseApp
 {
