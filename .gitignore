@@ -11,8 +11,8 @@
 #*.JSON
 #*.json
 
-*/bin/*
-!*/bin/data/
+#*/bin/*
+#!*/bin/data/
 
 # for bin folder in root
 #/bin/*
