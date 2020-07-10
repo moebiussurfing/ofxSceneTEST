@@ -3,6 +3,7 @@
 //#include "addonDEFINES.h"
 
 //#define INCLUDE_HAP
+
 #ifdef INCLUDE_HAP
 #include "ofxHapPlayer.h"
 #endif
@@ -15,15 +16,14 @@
 
 class ofxSceneTEST : public ofBaseApp
 {
-
-public:
-
 	//video hap
+private:
 #ifdef INCLUDE_HAP
 	ofxHapPlayer player;
 #endif
 
 	//gui
+private:
 	ofxPanel gui;
 	ofParameter<glm::vec2> Gui_Position;
 
@@ -86,15 +86,21 @@ public:
 
 	ofParameter<bool> SHOW_Gui{ "GUI", true };
 
+public:
+
+	//--------------------------------------------------------------
 	void setGuiVisible(bool b)
 	{
 		SHOW_Gui = b;
 	}
+
+	//--------------------------------------------------------------
 	bool getGuiVisible()
 	{
 		return SHOW_Gui.get();
 	}
 
+	//--------------------------------------------------------------
 	void refreshGui()
 	{
 		gui.maximizeAll();
@@ -114,7 +120,6 @@ public:
 		auto &gGuiPos = gScn.getGroup("GUI POSITION");
 		gGuiPos.minimize();
 	}
-
 
 	//--------------------------------------------------------------
 	ofxSceneTEST()
@@ -149,7 +154,7 @@ public:
 	//--------------------------------------------------------------
 	void setup()
 	{
-		ofLogVerbose("ofxSceneTEST") << "called setup";
+		ofLogVerbose(__FUNCTION__) << "called setup";
 
 		//-
 
@@ -158,16 +163,17 @@ public:
 		//-
 
 		//ofxGui theme
-		string pathFontGui = GLOBAL_Path + "fonts/overpass-mono-bold.otf";
+		//string pathFontGui = GLOBAL_Path + "fonts/overpass-mono-bold.otf";
+		string pathFontGui = "assets/fonts/overpass-mono-bold.otf";
 		ofFile file(pathFontGui);
 		if (file.exists())
 		{
-			ofLogNotice("ofxSceneTEST") << "ofxGui theme: LOADED FONT FILE '" << pathFontGui << "'";
+			ofLogNotice(__FUNCTION__) << "ofxGui theme: LOADED FONT FILE '" << pathFontGui << "'";
 			ofxGuiSetFont(pathFontGui, 9);
 		}
 		else
 		{
-			ofLogError("ofxSceneTEST") << "ofxGui theme: FONT FILE '" << pathFontGui << "' NOT FOUND!";
+			ofLogError(__FUNCTION__) << "ofxGui theme: FONT FILE '" << pathFontGui << "' NOT FOUND!";
 		}
 		ofxGuiSetDefaultHeight(20);
 		ofxGuiSetBorderColor(32);
@@ -181,18 +187,19 @@ public:
 
 		//ttf font
 		string pathFont;
-		pathFont = GLOBAL_Path + "fonts/Sequel100Black116.ttf";
+		//pathFont = GLOBAL_Path + "fonts/Sequel100Black116.ttf";
+		pathFont = "assets/fonts/Sequel100Black116.ttf";
 		//pathFont = GLOBAL_Path + "fonts/DSPTRLSuper.ttf"; size = 90;
 		//pathFont = GLOBAL_Path + "fonts/overpass-mono-bold.otf";size = 100;
 		size = 80;
 		bool bLoaded = font.load(pathFont, size, true, true);
 		if (bLoaded)
 		{
-			ofLogNotice("ofxSceneTEST") << "ttf font: LOADED FONT FILE '" << pathFont << "'";
+			ofLogNotice(__FUNCTION__) << "ttf font: LOADED FONT FILE '" << pathFont << "'";
 		}
 		else
 		{
-			ofLogError("ofxSceneTEST") << "ttf font: FONT FILE '" << pathFont << "' NOT FOUND!";
+			ofLogError(__FUNCTION__) << "ttf font: FONT FILE '" << pathFont << "' NOT FOUND!";
 		}
 		font.setLineHeight(size + 5);
 
@@ -235,12 +242,12 @@ public:
 		params_BW.add(RESET_BW);
 		params_BW.add(cBlack);
 		params_BW.add(cWhite);
-		
+
 		ENABLE_ColorBackground_1.set("COLOR BACKGROUND", true);
 		ENABLE_BackgroundImage_1.set("IMAGE BACKGROUND", true);
 		ENABLE_Letters_1.set("LETTERS", true);
 		ENABLE_Image_1.set("IMAGE", false);
-		
+
 		params_Channel1.add(ENABLE_ColorBackground_1);
 		params_Channel1.add(ENABLE_BackgroundImage_1);
 		params_Channel1.add(ENABLE_Image_1);
@@ -321,7 +328,7 @@ public:
 	//--------------------------------------------------------------
 	void update(ofEventArgs & args)
 	{
-		ofLogVerbose("ofxSceneTEST") << "called update";
+		ofLogVerbose(__FUNCTION__) << "called update";
 	}
 
 	//--------------------------------------------------------------
@@ -329,7 +336,7 @@ public:
 	{
 		if (SHOW_Gui)
 		{
-			ofLogVerbose("ofxSceneTEST") << "called draw";
+			ofLogVerbose(__FUNCTION__) << "called draw";
 
 			//in text mode
 			if (ENABLE_Letters_1 || ENABLE_Letters_2)
@@ -403,7 +410,7 @@ public:
 	{
 		if (ENABLE_BackgroundColor)
 			drawBackground();
-		
+
 		drawChannel1();
 		drawChannel2();
 	}
@@ -500,6 +507,7 @@ public:
 		ENABLE_randomizeColors = !ENABLE_randomizeColors;
 	}
 
+private:
 	//--------------------------------------------------------------
 	void Changed_params(ofAbstractParameter &e)
 	{
@@ -513,7 +521,7 @@ public:
 				&& name != "RANDOMIZER"
 				)
 			{
-				ofLogNotice("ofxSceneTEST") << "Changed_params: " << name << " : " << e;
+				ofLogNotice(__FUNCTION__) << "Changed_params: " << name << " : " << e;
 
 				//filter
 				if (name == "MODE COLORS")
@@ -543,7 +551,7 @@ public:
 				}
 				else if (name == "GUI POSITION")
 				{
-					Gui_Position = glm::vec2 ( 
+					Gui_Position = glm::vec2(
 						MIN(Gui_Position.get().x, ofGetWidth() - 210),
 						MIN(Gui_Position.get().y, ofGetHeight() - 400));
 
@@ -586,7 +594,7 @@ public:
 	//--------------------------------------------------------------
 	void loadParams(ofParameterGroup &g, string path)
 	{
-		ofLogNotice("ofxSceneTEST") << "loadParams: " << path;
+		ofLogNotice(__FUNCTION__) << "loadParams: " << path;
 		ofXml settings;
 		settings.load(path);
 		ofDeserialize(settings, g);
@@ -597,7 +605,7 @@ public:
 	//--------------------------------------------------------------
 	void saveParams(ofParameterGroup &g, string path)
 	{
-		ofLogNotice("ofxSceneTEST") << "saveParams: " << path;
+		ofLogNotice(__FUNCTION__) << "saveParams: " << path;
 		ofXml settings;
 		ofSerialize(settings, g);
 		settings.save(path);
@@ -605,6 +613,7 @@ public:
 
 
 
+private:
 #ifdef INCLUDE_HAP
 	//video hap
 	//--------------------------------------------------------------
@@ -641,7 +650,7 @@ public:
 		player.play();
 	}
 #endif
-
+private:
 	//scene design
 	//--------------------------------------------------------------
 	enum LAYER_Type
@@ -653,6 +662,7 @@ public:
 		LAYER_VIDEO
 	};
 
+private:
 	//--------------------------------------------------------------
 	void drawLayer(int layerType)
 	{
