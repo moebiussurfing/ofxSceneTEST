@@ -1,8 +1,13 @@
 #pragma once
 
-//#include "addonDEFINES.h"
-
+///---------------------------------
+///
 //#define INCLUDE_HAP
+///
+//---------------------------------
+
+
+//#include "addonDEFINES.h"
 
 #ifdef INCLUDE_HAP
 #include "ofxHapPlayer.h"
@@ -26,6 +31,17 @@ private:
 private:
 	ofxPanel gui;
 	ofParameter<glm::vec2> Gui_Position;
+
+	string str1 = "TEST\nofxFbo\nMixerBlend";
+	string str2 = "FBO\nMIXER\nBLENDER";
+
+public:
+	void setText1(string s) {
+		str1 = s;
+	}
+	void setText2(string s) {
+		str2 = s;
+	}
 
 	//layers:
 
@@ -92,6 +108,11 @@ public:
 	void setGuiVisible(bool b)
 	{
 		SHOW_Gui = b;
+	}
+	//--------------------------------------------------------------
+	void setToggleGuiVisible()
+	{
+		SHOW_Gui = !SHOW_Gui;
 	}
 
 	//--------------------------------------------------------------
@@ -174,6 +195,7 @@ public:
 		else
 		{
 			ofLogError(__FUNCTION__) << "ofxGui theme: FONT FILE '" << pathFontGui << "' NOT FOUND!";
+			font.load(OF_TTF_SANS, size, true, true);
 		}
 		ofxGuiSetDefaultHeight(20);
 		ofxGuiSetBorderColor(32);
@@ -191,7 +213,7 @@ public:
 		pathFont = "assets/fonts/Sequel100Black116.ttf";
 		//pathFont = GLOBAL_Path + "fonts/DSPTRLSuper.ttf"; size = 90;
 		//pathFont = GLOBAL_Path + "fonts/overpass-mono-bold.otf";size = 100;
-		size = 80;
+		size = 60;
 		bool bLoaded = font.load(pathFont, size, true, true);
 		if (bLoaded)
 		{
@@ -200,6 +222,7 @@ public:
 		else
 		{
 			ofLogError(__FUNCTION__) << "ttf font: FONT FILE '" << pathFont << "' NOT FOUND!";
+			font.load(OF_TTF_SERIF, size, true, true);
 		}
 		font.setLineHeight(size + 5);
 
@@ -217,7 +240,8 @@ public:
 
 		//video hap
 #ifdef INCLUDE_HAP
-		loadVideo(GLOBAL_Path + "movies/SampleHap.mov");
+		string str = "movies";
+		loadVideo(GLOBAL_Path + str + "/" + "SampleHap.mov");
 		player.setLoopState(OF_LOOP_NORMAL);
 #endif
 
@@ -719,8 +743,6 @@ private:
 		//-----------------
 		case LAYER_LETTERS:
 		{
-			string str1 = "TEST\nofxFbo\nMixerBlend";
-			string str2 = "FBO\nMIXER\nBLENDER";
 
 			//timer randomize colors
 			if (ENABLE_randomizeColors)
@@ -760,6 +782,7 @@ private:
 				ofSetColor(c1);
 
 			font.drawString(str1, x, y);
+			float _h = font.getStringBoundingBox(str1, x, y).getHeight();
 
 			//2nd line
 			if (ENABLE_BW)
@@ -767,7 +790,7 @@ private:
 			else
 				ofSetColor(c2);
 
-			font.drawString(str2, x, y + 3 * size + 10);
+			font.drawString(str2, x, y + _h + 10);
 
 			ofPopMatrix();
 			ofPopStyle();
