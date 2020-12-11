@@ -36,14 +36,17 @@ private:
 	string str2 = "FBO\nMIXER\nBLENDER";
 
 public:
+	//--------------------------------------------------------------
 	void setText1(string s) {
 		str1 = s;
 	}
+	//--------------------------------------------------------------
 	void setText2(string s) {
 		str2 = s;
 	}
 
 	//layers:
+private:
 
 	//background image
 	ofImage myBackground;
@@ -101,6 +104,8 @@ public:
 	bool DISABLE_Callbacks;
 
 	ofParameter<bool> SHOW_Gui{ "GUI", true };
+
+	ofParameter<int> chIndex{ "Force Source", 0, 0, 4 };// select what channel to draw whan drawAll is called
 
 public:
 
@@ -317,6 +322,8 @@ public:
 		Gui_Position = glm::vec2(ofGetWindowWidth() - 210, 5);
 		params.add(Gui_Position);
 
+		params.add(chIndex);
+
 		ofAddListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
 
 		//-
@@ -405,7 +412,7 @@ public:
 			}
 
 			//--
-//--
+	//--
 
 	////TEST: 
 	////ofApp background switcher to debug
@@ -432,11 +439,16 @@ public:
 	//--------------------------------------------------------------
 	void drawAll()
 	{
-		if (ENABLE_BackgroundColor)
-			drawBackground();
-
-		drawChannel1();
-		drawChannel2();
+		if (chIndex == 0)
+		{
+			if (ENABLE_BackgroundColor) drawBackground();
+			drawChannel1();
+			drawChannel2();
+		}
+		else
+		{
+			drawLayer(chIndex - 1);
+		}
 	}
 
 	//--------------------------------------------------------------
@@ -712,16 +724,16 @@ private:
 			yHalf = myBackground.getHeight();
 			ofTranslate(xHalf, yHalf);
 
-			//fade zoom
+			//faded zoom
 			int timer = 600;
 			int frame = ofGetFrameNum() % timer;
-			float s = ofMap(frame, 0, timer, 1.0, 1.25f);
-			ofScale(s);
+			float s = ofMap(frame, 0, timer, -1.0, 1.0f);
+			ofScale(1.0 + abs(0.1 * glm::sin(s)));
+
 			//draw
-			myBackground.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
+			image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
 
 			ofPopMatrix();
-
 
 			// //TEST:
 			// //B. background switcher
@@ -743,6 +755,9 @@ private:
 		//-----------------
 		case LAYER_LETTERS:
 		{
+			//two text lines
+			ofPushStyle();
+			ofPushMatrix();
 
 			//timer randomize colors
 			if (ENABLE_randomizeColors)
@@ -756,20 +771,16 @@ private:
 				}
 			}
 
-			//two text lines
-			ofPushStyle();
-			ofPushMatrix();
-
 			int xHalf, yHalf;
 			xHalf = ofGetWidth()*0.5;
 			yHalf = ofGetHeight()*0.5;
-			ofTranslate(xHalf, yHalf);
+			ofTranslate(1.5 * xHalf, yHalf);
 
-			//fade zoom
+			//faded zoom
 			int timer = 60;
 			int frame = ofGetFrameNum() % timer;
-			float s = ofMap(frame, 0, timer, 1.0, 0.95f);
-			ofScale(s);
+			float s = ofMap(frame, 0, timer, -1.0, 1.0f);
+			ofScale(1.3 + 2.0 * abs(0.1 * glm::sin(s)));
 
 			//draw
 			x = -xHalf + xOffset;
@@ -810,8 +821,11 @@ private:
 			//fade zoom
 			int timer = 200;
 			int frame = ofGetFrameNum() % timer;
-			float s = ofMap(frame, 0, timer, 1.0, 1.2f);
-			ofScale(s);
+			float s = ofMap(frame, 0, timer, -1.0, 1.0f);
+			ofScale(1.0 + abs(0.1 * glm::sin(s)));
+
+			//draw
+			myBackground.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
 
 			//draw
 			image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
