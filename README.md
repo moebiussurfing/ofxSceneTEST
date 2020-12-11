@@ -14,13 +14,14 @@ This helper addon easily draws a scene with two independent layers of these enab
 - Video (requires ofxHapPlayer and add #define INCLUDE_HAP and the addon)
 
 *The addon does not make any layer Blending/Mixing.* 
+* Check the /bin/data files: images and fonts.
 
 ## Features
 - Gui to tweak settings.
 - Auto save/load settings.
 
 ## Usage
-Look the example: ```example_ofxSceneTEST```
+Look the example: ```/example_ofxSceneTEST```
 
 ### ofApp
 ```c++
@@ -29,9 +30,14 @@ Look the example: ```example_ofxSceneTEST```
 ofxSceneTEST scene;
 
 //.cpp
-scene.drawChannel1();// draw 1st layer
-scene.drawChannel2();// draw 2nd layer
-scene.drawAll();// draw all channels but the selected by "Force Source" slider.
+// allows draw all channels 
+// but draws the selected by "Force Source" slider.
+scene.drawAll();
+
+// nothing more!
+
+//scene.drawChannel1();// draw 1st layer
+//scene.drawChannel2();// draw 2nd layer
 
 //optional
 //scene.setGuiVisible(!scene.getGuiVisible());
