@@ -23,23 +23,27 @@ This helper addon easily draws a scene with two independent layers of these enab
 ## Usage
 Look the example: ```/example_ofxSceneTEST```
 
-### ofApp
+### ofApp.h
 ```c++
-//.h
 #include "ofxSceneTEST.h"
-ofxSceneTEST scene;
 
-//.cpp
-// allows draw all channels 
-// but draws the selected by "Force Source" slider.
+ofxSceneTEST scene;
+```
+
+### ofApp.cpp
+```c++
+// allows draw all channels but draws the selected by "Force Source" slider:
 scene.drawAll();
 
 // nothing more!
 
+//-
+
+// customize:
 //scene.drawChannel1();// draw 1st layer
 //scene.drawChannel2();// draw 2nd layer
 
-//optional
+// other:
 //scene.setGuiVisible(!scene.getGuiVisible());
 //scene.setModeColorsToggle();
 //scene.setModeRandomizeToggle();
