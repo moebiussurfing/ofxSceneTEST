@@ -92,18 +92,18 @@ private:
 
 	ofParameterGroup params_Channel1{ "CHANNEL 1" };
 	ofParameter<bool> ENABLE_ColorBackground_1;
-	ofParameter<bool> ENABLE_BackgroundImage_1;
+	ofParameter<bool> ENABLE_Image_1_1;
 	ofParameter<bool> ENABLE_Letters_1;
-	ofParameter<bool> ENABLE_Image_1;
+	ofParameter<bool> ENABLE_Image_1_2;
 #ifdef INCLUDE_HAP
 	ofParameter<bool> ENABLE_Video_1;
 #endif
 
 	ofParameterGroup params_Channel2{ "CHANNEL 2" };
 	ofParameter<bool> ENABLE_ColorBackground_2;
-	ofParameter<bool> ENABLE_BackgroundImage_2;
+	ofParameter<bool> ENABLE_Image_2_1;
 	ofParameter<bool> ENABLE_Letters_2;
-	ofParameter<bool> ENABLE_Image_2;
+	ofParameter<bool> ENABLE_Image_2_2;
 #ifdef INCLUDE_HAP
 	ofParameter<bool> ENABLE_Video_2;
 #endif
@@ -268,7 +268,7 @@ public:
 		cBg.set("BACKGROUND COLOR", ofColor(128, 255), ofColor(0, 0), ofColor(255, 255));
 
 		ENABLE_Colors.set("MODE COLORS", true);
-		ENABLE_randomizeColors.set("RANDOMIZER", true);
+		ENABLE_randomizeColors.set("RANDOMIZER", false);
 		c1.set("COLOR 1", ofColor(128, 255), ofColor(0, 0), ofColor(255, 255));
 		c2.set("COLOR 2", ofColor(128, 255), ofColor(0, 0), ofColor(255, 255));
 		params_Colors.add(c1);
@@ -286,14 +286,14 @@ public:
 		params_BW.add(cBlack);
 		params_BW.add(cWhite);
 
-		ENABLE_ColorBackground_1.set("COLOR BACKGROUND", true);
-		ENABLE_BackgroundImage_1.set("IMAGE 1", true);
-		ENABLE_Letters_1.set("LETTERS", true);
-		ENABLE_Image_1.set("IMAGE 2", false);
+		ENABLE_ColorBackground_1.set("COLOR BACKGROUND", false);
+		ENABLE_Image_1_1.set("IMAGE 1", true);
+		ENABLE_Letters_1.set("LETTERS", false);
+		ENABLE_Image_1_2.set("IMAGE 2", false);
 
 		params_Channel1.add(ENABLE_ColorBackground_1);
-		params_Channel1.add(ENABLE_BackgroundImage_1);
-		params_Channel1.add(ENABLE_Image_1);
+		params_Channel1.add(ENABLE_Image_1_1);
+		params_Channel1.add(ENABLE_Image_1_2);
 #ifdef INCLUDE_HAP
 		ENABLE_Video_1.set("VIDEO", false);
 		params_Channel1.add(ENABLE_Video_1);
@@ -301,14 +301,14 @@ public:
 		params_Channel1.add(ENABLE_Letters_1);
 		params_SOURCES.add(params_Channel1);
 
-		ENABLE_ColorBackground_2.set("COLOR BACKGROUND", true);
-		ENABLE_BackgroundImage_2.set("IMAGE 1", true);
+		ENABLE_ColorBackground_2.set("COLOR BACKGROUND", false);
+		ENABLE_Image_2_1.set("IMAGE 1", false);
 		ENABLE_Letters_2.set("LETTERS", true);
-		ENABLE_Image_2.set("IMAGE 2", false);
+		ENABLE_Image_2_2.set("IMAGE 2", false);
 
 		params_Channel2.add(ENABLE_ColorBackground_2);
-		params_Channel2.add(ENABLE_BackgroundImage_2);
-		params_Channel2.add(ENABLE_Image_2);
+		params_Channel2.add(ENABLE_Image_2_1);
+		params_Channel2.add(ENABLE_Image_2_2);
 #ifdef INCLUDE_HAP
 		ENABLE_Video_2.set("VIDEO", false);
 		params_Channel2.add(ENABLE_Video_2);
@@ -374,7 +374,7 @@ public:
 	//--------------------------------------------------------------
 	void update(ofEventArgs & args)
 	{
-		ofLogVerbose(__FUNCTION__) << "called update";
+		//ofLogVerbose(__FUNCTION__) << "called update";
 	}
 
 	//--------------------------------------------------------------
@@ -382,7 +382,7 @@ public:
 	{
 		if (SHOW_Gui)
 		{
-			ofLogVerbose(__FUNCTION__) << "called draw";
+			//ofLogVerbose(__FUNCTION__) << "called draw";
 
 			//in text mode
 			if (ENABLE_Letters_1 || ENABLE_Letters_2)
@@ -476,13 +476,13 @@ public:
 		}
 
 		//background image
-		if (ENABLE_BackgroundImage_1)
+		if (ENABLE_Image_1_1)
 		{
 			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
 
 		//image
-		if (ENABLE_Image_1)
+		if (ENABLE_Image_1_2)
 		{
 			drawLayer(LAYER_IMAGE);
 		}
@@ -511,19 +511,19 @@ public:
 		}
 
 		//color background image
-		if (ENABLE_BackgroundImage_2)
+		if (ENABLE_Image_2_1)
 		{
 			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
 
 		//image background
-		if (ENABLE_BackgroundImage_2)
+		if (ENABLE_Image_2_1)
 		{
 			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
 
 		//image
-		if (ENABLE_Image_2)
+		if (ENABLE_Image_2_2)
 		{
 			drawLayer(LAYER_IMAGE);
 		}
