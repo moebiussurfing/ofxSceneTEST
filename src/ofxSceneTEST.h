@@ -1,4 +1,5 @@
 #pragma once
+#include "ofMain.h"
 
 ///---------------------------------
 ///
@@ -6,16 +7,17 @@
 ///
 //---------------------------------
 
-
-//#include "addonDEFINES.h"
+#define D_OFFSET 125//displace
+#define Z_MIN 1.18//zoom
+#define Z_MAX 9.0
+#define T_MIN 60//speed
+#define T_MAX 240
 
 #ifdef INCLUDE_HAP
 #include "ofxHapPlayer.h"
 #endif
 
 //--
-
-#include "ofMain.h"
 
 #include "ofxGui.h"
 
@@ -26,6 +28,16 @@ private:
 #ifdef INCLUDE_HAP
 	ofxHapPlayer player;
 #endif
+
+	//speed
+	int timer1 = 400;
+	int timer2 = 400;
+	int timer3 = 400;
+
+	//size
+	float max1 = 5;
+	float max2 = 5;
+	float max3 = 5;
 
 	//gui
 private:
@@ -105,7 +117,8 @@ private:
 
 	ofParameter<bool> SHOW_Gui{ "GUI", true };
 
-	ofParameter<int> chIndex{ "Force Source", 0, 0, 4 };// select what channel to draw whan drawAll is called
+	ofParameter<int> sourceIndex{ "Force Source", 0, 0, 4 };// select what channel to draw whan drawAll is called
+	ofParameter<bool> bSmooth{ "Smooth", true };
 
 public:
 
@@ -273,9 +286,9 @@ public:
 		params_BW.add(cWhite);
 
 		ENABLE_ColorBackground_1.set("COLOR BACKGROUND", true);
-		ENABLE_BackgroundImage_1.set("IMAGE BACKGROUND", true);
+		ENABLE_BackgroundImage_1.set("IMAGE 1", true);
 		ENABLE_Letters_1.set("LETTERS", true);
-		ENABLE_Image_1.set("IMAGE", false);
+		ENABLE_Image_1.set("IMAGE 2", false);
 
 		params_Channel1.add(ENABLE_ColorBackground_1);
 		params_Channel1.add(ENABLE_BackgroundImage_1);
@@ -288,9 +301,9 @@ public:
 		params_SOURCES.add(params_Channel1);
 
 		ENABLE_ColorBackground_2.set("COLOR BACKGROUND", true);
-		ENABLE_BackgroundImage_2.set("IMAGE BACKGROUND", true);
+		ENABLE_BackgroundImage_2.set("IMAGE 1", true);
 		ENABLE_Letters_2.set("LETTERS", true);
-		ENABLE_Image_2.set("IMAGE", false);
+		ENABLE_Image_2.set("IMAGE 2", false);
 
 		params_Channel2.add(ENABLE_ColorBackground_2);
 		params_Channel2.add(ENABLE_BackgroundImage_2);
@@ -322,7 +335,8 @@ public:
 		Gui_Position = glm::vec2(ofGetWindowWidth() - 210, 5);
 		params.add(Gui_Position);
 
-		params.add(chIndex);
+		params.add(sourceIndex);
+		params.add(bSmooth);
 
 		ofAddListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
 
@@ -439,7 +453,7 @@ public:
 	//--------------------------------------------------------------
 	void drawAll()
 	{
-		if (chIndex == 0)
+		if (sourceIndex == 0)
 		{
 			if (ENABLE_BackgroundColor) drawBackground();
 			drawChannel1();
@@ -447,7 +461,7 @@ public:
 		}
 		else
 		{
-			drawLayer(chIndex - 1);
+			drawLayer(sourceIndex - 1);
 		}
 	}
 
@@ -630,7 +644,7 @@ private:
 	//--------------------------------------------------------------
 	void loadParams(ofParameterGroup &g, string path)
 	{
-		ofLogNotice(__FUNCTION__) << "loadParams: " << path;
+		ofLogNotice(__FUNCTION__) << " : " << path;
 		ofXml settings;
 		settings.load(path);
 		ofDeserialize(settings, g);
@@ -641,7 +655,7 @@ private:
 	//--------------------------------------------------------------
 	void saveParams(ofParameterGroup &g, string path)
 	{
-		ofLogNotice(__FUNCTION__) << "saveParams: " << path;
+		ofLogNotice(__FUNCTION__) << " : " << path;
 		ofXml settings;
 		ofSerialize(settings, g);
 		settings.save(path);
@@ -708,7 +722,9 @@ private:
 
 		switch (layerType)
 		{
-			//-----------------
+			
+		//-----------------
+		
 		case LAYER_BACKGROUND_COLOR:
 		{
 			drawBackground();
@@ -723,12 +739,19 @@ private:
 			xHalf = myBackground.getWidth();
 			yHalf = myBackground.getHeight();
 			ofTranslate(xHalf, yHalf);
+			ofTranslate(D_OFFSET, D_OFFSET);//focus character
 
 			//faded zoom
-			int timer = 600;
-			int frame = ofGetFrameNum() % timer;
-			float s = ofMap(frame, 0, timer, -1.0, 1.0f);
-			ofScale(1.0 + abs(0.1 * glm::sin(s)));
+			int frame = ofGetFrameNum() % timer1;
+			float s = ofMap(frame, 0, timer1, -1.0, 1.0f);
+
+			if (ofGetFrameNum() % timer1 == 0 && !bSmooth)
+			{
+				max1 = ofRandom(Z_MIN, Z_MAX);
+				timer1 = ofRandom(T_MIN, T_MAX);
+			}
+
+			ofScale(Z_MIN + max1 * abs(0.1 * glm::sin(s)));
 
 			//draw
 			image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
@@ -762,8 +785,7 @@ private:
 			//timer randomize colors
 			if (ENABLE_randomizeColors)
 			{
-				int timer2 = 120;
-				int frame2 = ofGetFrameNum() % timer2;
+				int frame2 = ofGetFrameNum() % 120;
 				if (frame2 == 0)//randomize the 2 colors every timer2 (120) frames
 				{
 					c1 = ofColor(ofRandom(255), ofRandom(255), ofRandom(255), 255);
@@ -777,10 +799,16 @@ private:
 			ofTranslate(1.5 * xHalf, yHalf);
 
 			//faded zoom
-			int timer = 60;
-			int frame = ofGetFrameNum() % timer;
-			float s = ofMap(frame, 0, timer, -1.0, 1.0f);
-			ofScale(1.3 + 2.0 * abs(0.1 * glm::sin(s)));
+			int frame = ofGetFrameNum() % timer2;
+			float s = ofMap(frame, 0, timer2, -1.0, 1.0f);
+
+			if (ofGetFrameNum() % timer2 == 0 && !bSmooth)
+			{
+				timer2 = ofRandom(T_MIN, T_MAX);
+				max2 = ofRandom(Z_MIN, Z_MAX);
+			}
+
+			ofScale(Z_MIN + max2 * abs(0.1 * glm::sin(s)));
 
 			//draw
 			x = -xHalf + xOffset;
@@ -817,18 +845,24 @@ private:
 			xHalf = image.getWidth()*0.5;
 			yHalf = image.getHeight()*0.5;
 			ofTranslate(xHalf, yHalf);
+			ofTranslate(D_OFFSET, D_OFFSET);//focus character
 
 			//fade zoom
-			int timer = 200;
-			int frame = ofGetFrameNum() % timer;
-			float s = ofMap(frame, 0, timer, -1.0, 1.0f);
-			ofScale(1.0 + abs(0.1 * glm::sin(s)));
+			int frame = ofGetFrameNum() % timer3;
+			float s = ofMap(frame, 0, timer3, -1.0, 1.0f);
+			if (ofGetFrameNum() % timer3 == 0 && !bSmooth)
+			{
+				timer3 = ofRandom(T_MIN, T_MAX);
+				max3 = ofRandom(Z_MIN, Z_MAX);
+			}
+
+			ofScale(Z_MIN + max3 * abs(0.1 * glm::sin(s)));
 
 			//draw
 			myBackground.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
 
-			//draw
-			image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
+			////draw
+			//image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
 
 			ofPopMatrix();
 		}
