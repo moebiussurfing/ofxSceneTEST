@@ -248,12 +248,12 @@ public:
 
 		//background
 		string pathBg;
-		pathBg = "background1.jpg";
-		//pathBg = "background3.jpg";
+		pathBg = "image1.jpg";
+		//pathBg = "image2.jpg";
 		myBackground.load(GLOBAL_Path + pathBg);
 
 		//image
-		string pathImg = GLOBAL_Path + "background3.jpg";;
+		string pathImg = GLOBAL_Path + "image2.jpg";;
 		image.load(pathImg);
 
 		//video hap

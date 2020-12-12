@@ -1,23 +1,23 @@
 ## Description
-Fast scene drawer (with slow movement) to TEST and make other addons or some image processing.
+Fast&Easy scene drawer (2D image layers with slow movement) to **TEST** and make other addons or to do some image processing.
 
 ## Screenshot
-![Alt text](/readme_images/screenshot.jpeg?raw=true "MoebiusSurfing")
-The screenshot it's an app made with the https://github.com/jonasfehr/ofxGpuMixer from Jonas Fehr.
+![image](/readme_images/Capture1.JPG?raw=true "image")
+![image](/readme_images/Capture2.JPG?raw=true "image")
 
 ## Overview
 This helper addon easily draws a scene with two independent layers of these enabled or disabled 'draw types':
 
 - Image 1 (background)
 - Image 2 (image)
-- Letters (text) Using two selectable colors or black-and-white mode.
+- Text letters (Using two selectable colors or black-and-white mode)
 - Video (requires ofxHapPlayer and add #define INCLUDE_HAP and the addon)
 
 *The addon does not make any layer Blending/Mixing.* 
-* Check the /bin/data files: images and fonts.
+* Check the ```/bin/data files```: images and fonts.
 
 ## Features
-- Gui to tweak settings.
+- GUI to tweak settings.
 - Auto save/load settings.
 
 ## Usage
