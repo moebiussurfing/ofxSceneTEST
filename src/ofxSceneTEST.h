@@ -358,21 +358,23 @@ public:
 		//gui.getGroup("SCENE").minimize();
 		refreshGui();
 
-		//--
-
-		//startup
-
-		//settings
-		loadParams(params, path_Params);
-		//could crash if group vars structure, or name params are modified
-
-		DISABLE_Callbacks = false;
-
 		//-
 
 		//auto call update and draw linked to ofApp
 		ofAddListener(ofEvents().update, this, &ofxSceneTEST::update);
 		ofAddListener(ofEvents().draw, this, &ofxSceneTEST::draw);
+
+		//--
+
+		//startup
+		
+
+		//settings
+		loadParams(params, path_Params);
+		//could crash if group vars structure, or name params are modified
+
+		//TODO: crashes if moved ber load
+		DISABLE_Callbacks = false;
 	}
 
 	//--------------------------------------------------------------
