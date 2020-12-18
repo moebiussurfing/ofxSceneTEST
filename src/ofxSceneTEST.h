@@ -76,6 +76,8 @@ private:
 	ofParameterGroup params{ "SCENE" };
 
 	ofParameter<bool> ENABLE_BackgroundColor{ "GLOBAL BACKGROUND", false };
+	ofParameter<float> zoom{ "ZOOM", 1.0f, 0.5f, 10.f};
+	ofParameter<glm::vec2> posOffset{ "POSITION OFFSET", glm::vec2(0), glm::vec2(-1920), glm::vec2(1920) };
 
 	ofParameterGroup params_Letters{ "LETTERS" };
 	ofParameterGroup params_Colors{ "COLORS" };
@@ -322,6 +324,8 @@ public:
 		params_Letters.add(params_Colors);
 		params_Letters.add(params_BW);
 
+		params.add(zoom);
+		params.add(posOffset);
 		params.add(params_SOURCES);
 		params.add(params_Letters);
 
@@ -718,6 +722,11 @@ private:
 	//--------------------------------------------------------------
 	void drawLayer(int layerType)
 	{
+		ofPushMatrix();
+		//ofTranslate(-ofGetWidth() * zoom - 1, -ofGetHeight() * zoom - 1);
+		ofTranslate(posOffset);
+		ofScale(zoom);
+
 		int xOffset, yOffset;
 		xOffset = 250;
 		yOffset = 400;
@@ -883,6 +892,8 @@ private:
 		default:
 			break;
 		}
+
+		ofPopMatrix();
 	}
 };
 
