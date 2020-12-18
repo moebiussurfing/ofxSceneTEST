@@ -457,8 +457,9 @@ public:
 		if (sourceIndex == 0)
 		{
 			if (ENABLE_BackgroundColor) drawBackground();
+
 			drawChannel1();
-			drawChannel2();
+			drawChannel2();//?
 		}
 		else
 		{
@@ -492,14 +493,14 @@ public:
 		if (ENABLE_Video_1)
 		{
 			drawLayer(LAYER_VIDEO);
-		}
+	}
 #endif
 		//text
 		if (ENABLE_Letters_1)
 		{
 			drawLayer(LAYER_LETTERS);
 		}
-	}
+}
 
 	//--------------------------------------------------------------
 	void drawChannel2()
@@ -533,7 +534,7 @@ public:
 		if (ENABLE_Video_2)
 		{
 			drawLayer(LAYER_VIDEO);
-		}
+	}
 #endif
 		//text
 		if (ENABLE_Letters_2)
@@ -723,9 +724,9 @@ private:
 
 		switch (layerType)
 		{
-			
-		//-----------------
-		
+
+			//-----------------
+
 		case LAYER_BACKGROUND_COLOR:
 		{
 			drawBackground();
