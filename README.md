@@ -41,7 +41,7 @@ scene.drawAll();
 
 // nothing more !
 
-//-
+//--
 
 // independent channels:
 //scene.drawChannel1();// draw 1st layer
