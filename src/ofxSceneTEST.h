@@ -76,7 +76,7 @@ private:
 	ofParameterGroup params{ "SCENE" };
 
 	ofParameter<bool> ENABLE_BackgroundColor{ "GLOBAL BACKGROUND", false };
-	ofParameter<float> zoom{ "ZOOM", 1.0f, 0.5f, 10.f};
+	ofParameter<float> zoom{ "ZOOM", 1.0f, 0.5f, 10.f };
 	ofParameter<glm::vec2> posOffset{ "POSITION OFFSET", glm::vec2(0), glm::vec2(-1920), glm::vec2(1920) };
 
 	ofParameterGroup params_Letters{ "LETTERS" };
@@ -367,7 +367,7 @@ public:
 		//--
 
 		//startup
-		
+
 
 		//settings
 		loadParams(params, path_Params);
@@ -386,6 +386,8 @@ public:
 	//--------------------------------------------------------------
 	void draw(ofEventArgs & args)
 	{
+		////ofEnableDepthTest();
+
 		if (SHOW_Gui)
 		{
 			//ofLogVerbose(__FUNCTION__) << "called draw";
@@ -446,6 +448,8 @@ public:
 	//	ofBackground(ofColor::green);
 
 	//-
+			ofDisableDepthTest();
+
 			//scene
 			gui.draw();
 		}
@@ -476,10 +480,18 @@ public:
 	//--------------------------------------------------------------
 	void drawChannel1()///to draw all layers
 	{
+		ofEnableDepthTest();
+
 		//background color 
 		if (ENABLE_ColorBackground_1)
 		{
 			drawLayer(LAYER_BACKGROUND_COLOR);
+		}
+
+		//text
+		if (ENABLE_Letters_1)
+		{
+			drawLayer(LAYER_LETTERS);
 		}
 
 		//background image
@@ -499,22 +511,25 @@ public:
 		if (ENABLE_Video_1)
 		{
 			drawLayer(LAYER_VIDEO);
-	}
-#endif
-		//text
-		if (ENABLE_Letters_1)
-		{
-			drawLayer(LAYER_LETTERS);
 		}
-}
+#endif
+	}
 
 	//--------------------------------------------------------------
 	void drawChannel2()
 	{
+		ofEnableDepthTest();
+
 		//background color 
 		if (ENABLE_ColorBackground_2)
 		{
 			drawLayer(LAYER_BACKGROUND_COLOR);
+		}
+
+		//text
+		if (ENABLE_Letters_2)
+		{
+			drawLayer(LAYER_LETTERS);
 		}
 
 		//color background image
@@ -540,13 +555,8 @@ public:
 		if (ENABLE_Video_2)
 		{
 			drawLayer(LAYER_VIDEO);
-	}
-#endif
-		//text
-		if (ENABLE_Letters_2)
-		{
-			drawLayer(LAYER_LETTERS);
 		}
+#endif
 	}
 
 	//--------------------------------------------------------------
@@ -725,8 +735,9 @@ private:
 	void drawLayer(int layerType)
 	{
 		ofPushMatrix();
+		ofTranslate(posOffset.get());
 		//ofTranslate(-ofGetWidth() * zoom - 1, -ofGetHeight() * zoom - 1);
-		ofTranslate(posOffset);
+		//ofTranslate(posOffset.get().x,posOffset.get().y, -1);
 		ofScale(zoom);
 
 		int xOffset, yOffset;
