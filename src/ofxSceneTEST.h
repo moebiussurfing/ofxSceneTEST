@@ -202,29 +202,18 @@ public:
 		const int &key = eventArgs.key;
 		ofLogNotice(__FUNCTION__) << "'" << (char)key << "' \t\t[" << key << "]";
 
-		//modifiers
-		bool mod_COMMAND = eventArgs.hasModifier(OF_KEY_COMMAND);
-		bool mod_CONTROL = eventArgs.hasModifier(OF_KEY_CONTROL);
-		bool mod_ALT = eventArgs.hasModifier(OF_KEY_ALT);
-		bool mod_SHIFT = eventArgs.hasModifier(OF_KEY_SHIFT);
-		if (false)
-		{
-			ofLogNotice(__FUNCTION__) << "mod_COMMAND: " << (mod_COMMAND ? "ON" : "OFF");
-			ofLogNotice(__FUNCTION__) << "mod_CONTROL: " << (mod_CONTROL ? "ON" : "OFF");
-			ofLogNotice(__FUNCTION__) << "mod_ALT: " << (mod_ALT ? "ON" : "OFF");
-			ofLogNotice(__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
-		}
-
-		//--
-
-		//ofxChannelFx
-#ifdef USE_ofxChannelFx
-		channelFx.keyPressed(key);
-#endif
-
-		//----
-
-		//main panels
+		////modifiers
+		//bool mod_COMMAND = eventArgs.hasModifier(OF_KEY_COMMAND);
+		//bool mod_CONTROL = eventArgs.hasModifier(OF_KEY_CONTROL);
+		//bool mod_ALT = eventArgs.hasModifier(OF_KEY_ALT);
+		//bool mod_SHIFT = eventArgs.hasModifier(OF_KEY_SHIFT);
+		//if (false)
+		//{
+		//	ofLogNotice(__FUNCTION__) << "mod_COMMAND: " << (mod_COMMAND ? "ON" : "OFF");
+		//	ofLogNotice(__FUNCTION__) << "mod_CONTROL: " << (mod_CONTROL ? "ON" : "OFF");
+		//	ofLogNotice(__FUNCTION__) << "mod_ALT: " << (mod_ALT ? "ON" : "OFF");
+		//	ofLogNotice(__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
+		//}
 
 		//gui
 		if (key == 'S')
