@@ -364,10 +364,10 @@ public:
 
 		params.add(SHOW_Gui);
 		Gui_Position.set("GUI POSITION",
-			glm::vec2(ofGetWidth()*0.5f, ofGetHeight()* 0.5f),
+			glm::vec2(ofGetWidth()*0.5f, ofGetHeight()* 0.05f),
 			glm::vec2(0, 0),
 			glm::vec2(ofGetWidth(), ofGetHeight()));
-		Gui_Position = glm::vec2(ofGetWindowWidth() - 210, 5);
+		//Gui_Position = glm::vec2(ofGetWindowWidth() - 210, 5);
 		params.add(Gui_Position);
 
 		params.add(sourceIndex);
