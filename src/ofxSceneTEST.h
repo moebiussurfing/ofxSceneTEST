@@ -713,7 +713,7 @@ private:
 	void saveParams(ofParameterGroup &g, string path)
 	{
 		ofxSurfingHelpers::CheckFolder(path_GLOBAL);
-	
+
 		ofLogNotice(__FUNCTION__) << " : " << path;
 		ofXml settings;
 		ofSerialize(settings, g);
@@ -798,28 +798,45 @@ private:
 		case LAYER_BACKGROUND_IMAGE:
 		{
 			ofPushMatrix();
-
-			int xHalf, yHalf;
-			xHalf = myBackground.getWidth();
-			yHalf = myBackground.getHeight();
-			ofTranslate(xHalf, yHalf);
-			ofTranslate(D_OFFSET, D_OFFSET);//focus character
-
-			//faded zoom
-			int frame = ofGetFrameNum() % timer1;
-			float s = ofMap(frame, 0, timer1, -1.0, 1.0f);
-
-			if (ofGetFrameNum() % timer1 == 0 && !bSmooth)
 			{
-				max1 = ofRandom(Z_MIN, Z_MAX);
-				timer1 = ofRandom(T_MIN, T_MAX);
+				int xHalf, yHalf;
+				xHalf = myBackground.getWidth();
+				yHalf = myBackground.getHeight();
+				ofTranslate(xHalf, yHalf);
+				ofTranslate(D_OFFSET, D_OFFSET);//focus character
+
+				//faded zoom
+				int frame = ofGetFrameNum() % timer1;
+				float s = ofMap(frame, 0, timer1, -1.0, 1.0f);
+
+				if (ofGetFrameNum() % timer1 == 0 && !bSmooth)
+				{
+					max1 = ofRandom(Z_MIN, Z_MAX);
+					timer1 = ofRandom(T_MIN, T_MAX);
+				}
+
+				ofScale(Z_MIN + max1 * abs(0.1 * glm::sin(s)));
+
+				ofPushMatrix();
+				{
+					const int MAX_X = 100;
+					const int MAX_Y = 200;
+					const float MAX_S = 1.02f;
+					const float noiseAmnt = 0.07f;
+					float scale = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 1, MAX_S);
+					float noise = ofMap(ofxSurfingHelpers::Noise(), -1, 1, -noiseAmnt, noiseAmnt);
+					int xOffset = scale * MAX_X;
+					int yOffset = scale * MAX_Y;
+					ofTranslate(xOffset, 0);
+
+					ofScale(scale + noise);
+
+					//draw
+					image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
+
+				}
+				ofPopMatrix();
 			}
-
-			ofScale(Z_MIN + max1 * abs(0.1 * glm::sin(s)));
-
-			//draw
-			image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
-
 			ofPopMatrix();
 
 			// //TEST:
@@ -871,6 +888,10 @@ private:
 				timer2 = ofRandom(T_MIN, T_MAX);
 				max2 = ofRandom(Z_MIN, Z_MAX);
 			}
+
+			const float noiseAmnt = 0.07f;
+			float noise = ofMap(ofxSurfingHelpers::Noise(), -1, 1, -noiseAmnt, noiseAmnt);
+			ofScale(1.f + noise);
 
 			ofScale(Z_MIN + max2 * abs(0.1 * glm::sin(s)));
 
