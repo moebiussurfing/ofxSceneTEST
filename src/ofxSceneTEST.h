@@ -20,6 +20,7 @@
 //--
 
 #include "ofxGui.h"
+#include "ofxSurfing_ofxGui.h"
 
 class ofxSceneTEST : public ofBaseApp
 {
@@ -113,11 +114,13 @@ private:
 	//-
 
 	string path_Params;
-	string GLOBAL_Path;
+	string path_GLOBAL;
 
-	bool DISABLE_Callbacks;
+	bool bDISABLECALLBACKS;
 
-	ofParameter<bool> SHOW_Gui{ "GUI", true };
+	ofParameter<bool> bGui{ "GUI", true };
+	ofParameter<bool> bCH1{ "CH1", true };
+	ofParameter<bool> bCH2{ "CH2", true };
 
 	ofParameter<int> sourceIndex{ "Force Source", 0, 0, 4 };// select what channel to draw whan drawAll is called
 	ofParameter<bool> bSmooth{ "Smooth", true };
@@ -127,18 +130,18 @@ public:
 	//--------------------------------------------------------------
 	void setGuiVisible(bool b)
 	{
-		SHOW_Gui = b;
+		bGui = b;
 	}
 	//--------------------------------------------------------------
 	void setToggleGuiVisible()
 	{
-		SHOW_Gui = !SHOW_Gui;
+		bGui = !bGui;
 	}
 
 	//--------------------------------------------------------------
 	bool getGuiVisible()
 	{
-		return SHOW_Gui.get();
+		return bGui.get();
 	}
 
 	//--------------------------------------------------------------
@@ -169,12 +172,14 @@ public:
 		//ofSetLogLevel("ofxSceneTEST", OF_LOG_VERBOSE);
 
 		//path for settings
-		GLOBAL_Path = "ofxSceneTEST/";
+		path_GLOBAL = "ofxSceneTEST/";
 
 		//out of global folder
-		path_Params = GLOBAL_Path + "scene.xml";
-		
+		path_Params = path_GLOBAL + "scene.xml";
+
 		ofAddListener(ofEvents().keyPressed, this, &ofxSceneTEST::keyPressed);
+
+		ofxSurfingHelpers::setThemeSurfing_ofxGui();
 
 		setup();
 	}
@@ -188,9 +193,10 @@ public:
 		//get gui position before save
 		Gui_Position = glm::vec2(gui.getPosition());
 
+
 		//settings
 		saveParams(params, path_Params);
-		
+
 		ofRemoveListener(ofEvents().keyPressed, this, &ofxSceneTEST::keyPressed);
 
 		//exit();
@@ -229,29 +235,29 @@ public:
 
 		//-
 
-		DISABLE_Callbacks = true;
+		bDISABLECALLBACKS = true;
 
 		//-
 
-		//ofxGui theme
-		//string pathFontGui = GLOBAL_Path + "fonts/overpass-mono-bold.otf";
-		string pathFontGui = "assets/fonts/overpass-mono-bold.otf";
-		ofFile file(pathFontGui);
-		if (file.exists())
-		{
-			ofLogNotice(__FUNCTION__) << "ofxGui theme: LOADED FONT FILE '" << pathFontGui << "'";
-			ofxGuiSetFont(pathFontGui, 9);
-		}
-		else
-		{
-			ofLogError(__FUNCTION__) << "ofxGui theme: FONT FILE '" << pathFontGui << "' NOT FOUND!";
-			font.load(OF_TTF_SANS, size, true, true);
-		}
-		ofxGuiSetDefaultHeight(20);
-		ofxGuiSetBorderColor(32);
-		ofxGuiSetFillColor(ofColor(48));
-		ofxGuiSetTextColor(ofColor::white);
-		ofxGuiSetHeaderColor(ofColor(24));
+		////ofxGui theme
+		////string pathFontGui = path_GLOBAL + "fonts/overpass-mono-bold.otf";
+		//string pathFontGui = "assets/fonts/overpass-mono-bold.otf";
+		//ofFile file(pathFontGui);
+		//if (file.exists())
+		//{
+		//	ofLogNotice(__FUNCTION__) << "ofxGui theme: LOADED FONT FILE '" << pathFontGui << "'";
+		//	ofxGuiSetFont(pathFontGui, 9);
+		//}
+		//else
+		//{
+		//	ofLogError(__FUNCTION__) << "ofxGui theme: FONT FILE '" << pathFontGui << "' NOT FOUND!";
+		//	font.load(OF_TTF_SANS, size, true, true);
+		//}
+		//ofxGuiSetDefaultHeight(20);
+		//ofxGuiSetBorderColor(32);
+		//ofxGuiSetFillColor(ofColor(48));
+		//ofxGuiSetTextColor(ofColor::white);
+		//ofxGuiSetHeaderColor(ofColor(24));
 
 		//-
 
@@ -259,10 +265,10 @@ public:
 
 		//ttf font
 		string pathFont;
-		//pathFont = GLOBAL_Path + "fonts/Sequel100Black116.ttf";
+		//pathFont = path_GLOBAL + "fonts/Sequel100Black116.ttf";
 		pathFont = "assets/fonts/Sequel100Black116.ttf";
-		//pathFont = GLOBAL_Path + "fonts/DSPTRLSuper.ttf"; size = 90;
-		//pathFont = GLOBAL_Path + "fonts/overpass-mono-bold.otf";size = 100;
+		//pathFont = path_GLOBAL + "fonts/DSPTRLSuper.ttf"; size = 90;
+		//pathFont = path_GLOBAL + "fonts/overpass-mono-bold.otf";size = 100;
 		size = 60;
 		bool bLoaded = font.load(pathFont, size, true, true);
 		if (bLoaded)
@@ -282,16 +288,16 @@ public:
 		string pathBg;
 		pathBg = "image1.jpg";
 		//pathBg = "image2.jpg";
-		myBackground.load(GLOBAL_Path + pathBg);
+		myBackground.load(path_GLOBAL + pathBg);
 
 		//image
-		string pathImg = GLOBAL_Path + "image2.jpg";;
+		string pathImg = path_GLOBAL + "image2.jpg";;
 		image.load(pathImg);
 
 		//video hap
 #ifdef INCLUDE_HAP
 		string str = "movies";
-		loadVideo(GLOBAL_Path + str + "/" + "SampleHap.mov");
+		loadVideo(path_GLOBAL + str + "/" + "SampleHap.mov");
 		player.setLoopState(OF_LOOP_NORMAL);
 #endif
 
@@ -354,6 +360,9 @@ public:
 		params_Letters.add(params_Colors);
 		params_Letters.add(params_BW);
 
+		params.add(bCH1);
+		params.add(bCH2);
+
 		params.add(zoom);
 		params.add(posOffset);
 		params.add(params_SOURCES);
@@ -362,7 +371,7 @@ public:
 		params.add(ENABLE_BackgroundColor);
 		params.add(cBg);
 
-		params.add(SHOW_Gui);
+		params.add(bGui);
 		Gui_Position.set("GUI POSITION",
 			glm::vec2(ofGetWidth()*0.5f, ofGetHeight()* 0.05f),
 			glm::vec2(0, 0),
@@ -404,7 +413,7 @@ public:
 		//could crash if group vars structure, or name params are modified
 
 		//TODO: crashes if moved ber load
-		DISABLE_Callbacks = false;
+		bDISABLECALLBACKS = false;
 	}
 
 	//--------------------------------------------------------------
@@ -418,7 +427,7 @@ public:
 	{
 		////ofEnableDepthTest();
 
-		if (SHOW_Gui)
+		if (bGui)
 		{
 			//ofLogVerbose(__FUNCTION__) << "called draw";
 
@@ -498,8 +507,8 @@ public:
 		{
 			if (ENABLE_BackgroundColor) drawBackground();
 
-			drawChannel1();
-			drawChannel2();//?
+			if (bCH1) drawChannel1();
+			if (bCH2) drawChannel2();
 		}
 		else
 		{
@@ -592,10 +601,10 @@ public:
 	//--------------------------------------------------------------
 	void setModeColorsToggle()
 	{
-		DISABLE_Callbacks = true;//too avoid crashes
+		bDISABLECALLBACKS = true;//too avoid crashes
 		ENABLE_BW = !ENABLE_BW;
 		ENABLE_Colors = !ENABLE_BW;
-		DISABLE_Callbacks = false;
+		bDISABLECALLBACKS = false;
 		updateGui();
 	}
 
@@ -609,7 +618,7 @@ private:
 	//--------------------------------------------------------------
 	void Changed_params(ofAbstractParameter &e)
 	{
-		if (!DISABLE_Callbacks)
+		if (!bDISABLECALLBACKS)
 		{
 			string name = e.getName();
 
@@ -624,27 +633,27 @@ private:
 				//filter
 				if (name == "MODE COLORS")
 				{
-					DISABLE_Callbacks = true;//too avoid crashes
+					bDISABLECALLBACKS = true;//too avoid crashes
 					ENABLE_BW = !ENABLE_Colors;
 					updateGui();
-					DISABLE_Callbacks = false;
+					bDISABLECALLBACKS = false;
 				}
 				else if (name == "MODE BW")
 				{
-					DISABLE_Callbacks = true;
+					bDISABLECALLBACKS = true;
 					ENABLE_Colors = !ENABLE_BW;
 					updateGui();
-					DISABLE_Callbacks = false;
+					bDISABLECALLBACKS = false;
 				}
 				else if (name == "RESET")
 				{
 					if (RESET_BW)
 					{
-						DISABLE_Callbacks = true;
+						bDISABLECALLBACKS = true;
 						RESET_BW = false;
 						cBlack = ofColor(0, 255);
 						cWhite = ofColor(255, 255);
-						DISABLE_Callbacks = false;
+						bDISABLECALLBACKS = false;
 					}
 				}
 				else if (name == "GUI POSITION")
@@ -703,15 +712,16 @@ private:
 	//--------------------------------------------------------------
 	void saveParams(ofParameterGroup &g, string path)
 	{
+		ofxSurfingHelpers::CheckFolder(path_GLOBAL);
+	
 		ofLogNotice(__FUNCTION__) << " : " << path;
 		ofXml settings;
 		ofSerialize(settings, g);
 		settings.save(path);
 	}
 
-
-
 private:
+
 #ifdef INCLUDE_HAP
 	//video hap
 	//--------------------------------------------------------------
