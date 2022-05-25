@@ -43,7 +43,7 @@ private:
 	//gui
 private:
 	ofxPanel gui;
-	ofParameter<glm::vec2> Gui_Position;
+	ofParameter<glm::vec2> position_Gui;
 
 	string str1 = "TEST\nofxFbo\nMixerBlend";
 	string str2 = "FBO\nMIXER\nBLENDER";
@@ -116,7 +116,7 @@ private:
 	string path_Params;
 	string path_GLOBAL;
 
-	bool bDISABLECALLBACKS;
+	bool bDISABLE_CALLBACKS;
 
 	ofParameter<bool> bGui{ "GUI", true };
 	ofParameter<bool> bCH1{ "CH1", true };
@@ -148,20 +148,20 @@ public:
 	void refreshGui()
 	{
 		gui.maximizeAll();
-		auto &gScn = gui.getGroup("SCENE");
-		auto &gSrc = gScn.getGroup("SOURCES");
-		auto &ch1 = gSrc.getGroup("CHANNEL 1");
-		auto &ch2 = gSrc.getGroup("CHANNEL 2");
+		auto& gScn = gui.getGroup("SCENE");
+		auto& gSrc = gScn.getGroup("SOURCES");
+		auto& ch1 = gSrc.getGroup("CHANNEL 1");
+		auto& ch2 = gSrc.getGroup("CHANNEL 2");
 		//gSrc.minimize();
 		ch2.minimize();
 
-		auto &gLtr = gScn.getGroup("LETTERS");
-		auto &Col = gLtr.getGroup("COLORS");
-		auto &Bw = gLtr.getGroup("BW");
+		auto& gLtr = gScn.getGroup("LETTERS");
+		auto& Col = gLtr.getGroup("COLORS");
+		auto& Bw = gLtr.getGroup("BW");
 		Bw.minimize();
 		gLtr.minimize();
 
-		auto &gGuiPos = gScn.getGroup("GUI POSITION");
+		auto& gGuiPos = gScn.getGroup("GUI POSITION");
 		gGuiPos.minimize();
 	}
 
@@ -191,7 +191,7 @@ public:
 		ofRemoveListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
 
 		//get gui position before save
-		Gui_Position = glm::vec2(gui.getPosition());
+		position_Gui = glm::vec2(gui.getPosition());
 
 
 		//settings
@@ -203,9 +203,9 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void keyPressed(ofKeyEventArgs &eventArgs)
+	void keyPressed(ofKeyEventArgs& eventArgs)
 	{
-		const int &key = eventArgs.key;
+		const int& key = eventArgs.key;
 		ofLogNotice(__FUNCTION__) << "'" << (char)key << "' \t\t[" << key << "]";
 
 		////modifiers
@@ -235,7 +235,7 @@ public:
 
 		//-
 
-		bDISABLECALLBACKS = true;
+		bDISABLE_CALLBACKS = true;
 
 		//-
 
@@ -372,12 +372,12 @@ public:
 		params.add(cBg);
 
 		params.add(bGui);
-		Gui_Position.set("GUI POSITION",
-			glm::vec2(ofGetWidth()*0.5f, ofGetHeight()* 0.05f),
+		position_Gui.set("GUI POSITION",
+			glm::vec2(ofGetWidth() * 0.5f, ofGetHeight() * 0.05f),
 			glm::vec2(0, 0),
 			glm::vec2(ofGetWidth(), ofGetHeight()));
-		//Gui_Position = glm::vec2(ofGetWindowWidth() - 210, 5);
-		params.add(Gui_Position);
+		//position_Gui = glm::vec2(ofGetWindowWidth() - 210, 5);
+		params.add(position_Gui);
 
 		params.add(sourceIndex);
 		params.add(bSmooth);
@@ -391,7 +391,7 @@ public:
 		gui.add(params);
 
 		//default gui pos
-		gui.setPosition(Gui_Position->x, Gui_Position->y);
+		gui.setPosition(position_Gui->x, position_Gui->y);
 
 		//collapse
 		//gui.getGroup("SCENE").minimize();
@@ -413,17 +413,17 @@ public:
 		//could crash if group vars structure, or name params are modified
 
 		//TODO: crashes if moved ber load
-		bDISABLECALLBACKS = false;
+		bDISABLE_CALLBACKS = false;
 	}
 
 	//--------------------------------------------------------------
-	void update(ofEventArgs & args)
+	void update(ofEventArgs& args)
 	{
 		//ofLogVerbose(__FUNCTION__) << "called update";
 	}
 
 	//--------------------------------------------------------------
-	void draw(ofEventArgs & args)
+	void draw(ofEventArgs& args)
 	{
 		////ofEnableDepthTest();
 
@@ -438,8 +438,8 @@ public:
 				int x, y;
 
 				//left to the gui
-				//x = Gui_Position->x - r -10;
-				//y = Gui_Position->y + 2 * r + 125;
+				//x = position_Gui->x - r -10;
+				//y = position_Gui->y + 2 * r + 125;
 
 				//below the gui
 				int xPad = 20;
@@ -498,6 +498,12 @@ public:
 	void drawBackground()
 	{
 		ofClear(cBg);
+	}
+
+	//--------------------------------------------------------------
+	void drawScene()
+	{
+		drawAll();
 	}
 
 	//--------------------------------------------------------------
@@ -601,10 +607,10 @@ public:
 	//--------------------------------------------------------------
 	void setModeColorsToggle()
 	{
-		bDISABLECALLBACKS = true;//too avoid crashes
+		bDISABLE_CALLBACKS = true;//too avoid crashes
 		ENABLE_BW = !ENABLE_BW;
 		ENABLE_Colors = !ENABLE_BW;
-		bDISABLECALLBACKS = false;
+		bDISABLE_CALLBACKS = false;
 		updateGui();
 	}
 
@@ -616,9 +622,9 @@ public:
 
 private:
 	//--------------------------------------------------------------
-	void Changed_params(ofAbstractParameter &e)
+	void Changed_params(ofAbstractParameter& e)
 	{
-		if (!bDISABLECALLBACKS)
+		if (!bDISABLE_CALLBACKS)
 		{
 			string name = e.getName();
 
@@ -633,36 +639,36 @@ private:
 				//filter
 				if (name == "MODE COLORS")
 				{
-					bDISABLECALLBACKS = true;//too avoid crashes
+					bDISABLE_CALLBACKS = true;//too avoid crashes
 					ENABLE_BW = !ENABLE_Colors;
 					updateGui();
-					bDISABLECALLBACKS = false;
+					bDISABLE_CALLBACKS = false;
 				}
 				else if (name == "MODE BW")
 				{
-					bDISABLECALLBACKS = true;
+					bDISABLE_CALLBACKS = true;
 					ENABLE_Colors = !ENABLE_BW;
 					updateGui();
-					bDISABLECALLBACKS = false;
+					bDISABLE_CALLBACKS = false;
 				}
 				else if (name == "RESET")
 				{
 					if (RESET_BW)
 					{
-						bDISABLECALLBACKS = true;
+						bDISABLE_CALLBACKS = true;
 						RESET_BW = false;
 						cBlack = ofColor(0, 255);
 						cWhite = ofColor(255, 255);
-						bDISABLECALLBACKS = false;
+						bDISABLE_CALLBACKS = false;
 					}
 				}
 				else if (name == "GUI POSITION")
 				{
-					Gui_Position = glm::vec2(
-						MIN(Gui_Position.get().x, ofGetWidth() - 210),
-						MIN(Gui_Position.get().y, ofGetHeight() - 400));
+					position_Gui = glm::vec2(
+						MIN(position_Gui.get().x, ofGetWidth() - 210),
+						MIN(position_Gui.get().y, ofGetHeight() - 400));
 
-					gui.setPosition(Gui_Position->x, Gui_Position->y);
+					gui.setPosition(position_Gui->x, position_Gui->y);
 				}
 
 				//-
@@ -679,10 +685,10 @@ private:
 	void updateGui()
 	{
 		//collapse groups
-		auto &g0 = gui.getGroup("SCENE");//1st level
-		auto &g1 = g0.getGroup("LETTERS");//1st level
-		auto &g11 = g1.getGroup("BW");//2nd level
-		auto &g12 = g1.getGroup("COLORS");//2nd level
+		auto& g0 = gui.getGroup("SCENE");//1st level
+		auto& g1 = g0.getGroup("LETTERS");//1st level
+		auto& g11 = g1.getGroup("BW");//2nd level
+		auto& g12 = g1.getGroup("COLORS");//2nd level
 		g11.minimize();
 		g12.minimize();
 
@@ -699,18 +705,18 @@ private:
 	}
 
 	//--------------------------------------------------------------
-	void loadParams(ofParameterGroup &g, string path)
+	void loadParams(ofParameterGroup& g, string path)
 	{
 		ofLogNotice(__FUNCTION__) << " : " << path;
 		ofXml settings;
 		settings.load(path);
 		ofDeserialize(settings, g);
 
-		gui.setPosition(Gui_Position->x, Gui_Position->y);
+		gui.setPosition(position_Gui->x, position_Gui->y);
 	}
 
 	//--------------------------------------------------------------
-	void saveParams(ofParameterGroup &g, string path)
+	void saveParams(ofParameterGroup& g, string path)
 	{
 		ofxSurfingHelpers::CheckFolder(path_GLOBAL);
 
@@ -758,7 +764,9 @@ private:
 		player.play();
 	}
 #endif
+
 private:
+
 	//scene design
 	//--------------------------------------------------------------
 	enum LAYER_Type
@@ -771,6 +779,7 @@ private:
 	};
 
 private:
+
 	//--------------------------------------------------------------
 	void drawLayer(int layerType)
 	{
@@ -875,8 +884,8 @@ private:
 			}
 
 			int xHalf, yHalf;
-			xHalf = ofGetWidth()*0.5;
-			yHalf = ofGetHeight()*0.5;
+			xHalf = ofGetWidth() * 0.5;
+			yHalf = ofGetHeight() * 0.5;
 			ofTranslate(1.5 * xHalf, yHalf);
 
 			//faded zoom
@@ -895,26 +904,39 @@ private:
 
 			ofScale(Z_MIN + max2 * abs(0.1 * glm::sin(s)));
 
-			//draw
+			// draw
 			x = -xHalf + xOffset;
 			y = -yHalf + yOffset;
 
-			//1st line
-			if (ENABLE_BW)
-				ofSetColor(cBlack);
-			else
-				ofSetColor(c1);
+			ofPushMatrix();
+			{
+				// 1st line
+				if (ENABLE_BW) ofSetColor(cBlack);
+				else ofSetColor(c1);
 
-			font.drawString(str1, x, y);
-			float _h = font.getStringBoundingBox(str1, x, y).getHeight();
+				const float noiseAmnt = 0.7f;
+				float scale = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 1, 1.08f);
+				float noise = ofMap(ofxSurfingHelpers::Noise(), -1, 1, -noiseAmnt, noiseAmnt);
+				float xOffset = noise * 200;
+				float vOffset = noise * 200;
+				ofScale(scale + noise);
+				x += xOffset - 50;
+				y -= vOffset - 70;
 
-			//2nd line
-			if (ENABLE_BW)
-				ofSetColor(cWhite);
-			else
-				ofSetColor(c2);
+				font.drawString(str1, x, y);
 
-			font.drawString(str2, x, y + _h + 10);
+				float _h = font.getStringBoundingBox(str1, x, y).getHeight();
+
+				// 2nd line
+				if (ENABLE_BW) ofSetColor(cWhite);
+				else ofSetColor(c2);
+
+				float noise2 = ofMap(ofxSurfingHelpers::Noise(), 2, 0.1f, -noiseAmnt, noiseAmnt);
+				y -= noise2 * 100;
+
+				font.drawString(str2, x, y + _h + 10);
+			}
+			ofPopMatrix();
 
 			ofPopMatrix();
 			ofPopStyle();
@@ -927,8 +949,8 @@ private:
 			ofPushMatrix();
 
 			int xHalf, yHalf;
-			xHalf = image.getWidth()*0.5;
-			yHalf = image.getHeight()*0.5;
+			xHalf = image.getWidth() * 0.5;
+			yHalf = image.getHeight() * 0.5;
 			ofTranslate(xHalf, yHalf);
 			ofTranslate(D_OFFSET, D_OFFSET);//focus character
 
