@@ -21,6 +21,7 @@
 
 #include "ofxGui.h"
 #include "ofxSurfing_ofxGui.h"
+#include "ofxSurfingHelpers.h"
 
 class ofxSceneTEST : public ofBaseApp
 {
@@ -179,7 +180,7 @@ public:
 
 		ofAddListener(ofEvents().keyPressed, this, &ofxSceneTEST::keyPressed);
 
-		ofxSurfingHelpers::setThemeSurfing_ofxGui();
+		ofxSurfingHelpers::setThemeDarkMini_ofxGui();
 
 		setup();
 	}

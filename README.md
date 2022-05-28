@@ -19,6 +19,9 @@ This addon easily draws a scene with two independent layers of these enabled or 
 *The addon does not make any layer Blending/Mixing.* 
 * Check the ```/bin/data``` files: 2 images and 1 font.
 
+## Dependecies
+* ofxSurfingHelpers: Only for small ofxGui theming. Can be removed easy.
+
 ## Features
 - GUI to Tweak settings.
 - Auto Save/Load settings.
