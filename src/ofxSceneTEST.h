@@ -131,7 +131,6 @@ private:
 
 	bool bDISABLE_CALLBACKS;
 
-	ofParameter<bool> bGui{ "GUI", true };
 	ofParameter<bool> bCH1{ "CH1", true };
 	ofParameter<bool> bCH2{ "CH2", true };
 
@@ -143,6 +142,8 @@ private:
 	ofParameter<bool> bReset{ "RESET",false };
 
 public:
+
+	ofParameter<bool> bGui{ "SCENE TEST", true };
 
 	//--------------------------------------------------------------
 	void setGuiVisible(bool b)
@@ -201,6 +202,8 @@ public:
 	//--------------------------------------------------------------
 	void doReset()
 	{
+		bDISABLE_CALLBACKS = true;
+
 		cBg.set(ofColor(32, 255));
 
 		ENABLE_Colors = true;
@@ -222,15 +225,18 @@ public:
 		ENABLE_Letters_2 = true;
 		ENABLE_Image_2_2 = false;
 
-		bGui = true;
-		bCH1 = false;
-		bCH2 = true;
-
 		bSmooth = false;
 		sourceIndex = 0;
 
 		zoom = 1;
 		position_Offset = glm::vec2(0, 0);
+
+		bCH1 = false;
+		bCH2 = true;
+
+		//bGui = true;
+		
+		bDISABLE_CALLBACKS = false;
 
 		refreshGui();
 	}
@@ -428,7 +434,6 @@ public:
 		//gui.minimizeAll();
 		refreshGui();
 
-		//TODO: crashes if moved ber load
 		bDISABLE_CALLBACKS = false;
 	}
 
@@ -442,6 +447,8 @@ public:
 	{
 		if (bGui)
 		{
+			//ofDisableDepthTest();
+
 			//ofLogVerbose(__FUNCTION__) << "called draw";
 
 			//in text mode
@@ -498,7 +505,7 @@ public:
 
 			//--
 
-			ofDisableDepthTest();
+			//ofDisableDepthTest();
 
 			//scene
 			gui.draw();
@@ -546,7 +553,7 @@ public:
 	//--------------------------------------------------------------
 	void drawChannel1()///to draw all layers
 	{
-		ofEnableDepthTest();
+		//ofEnableDepthTest();
 
 		// background color 
 		if (ENABLE_ColorBackground_1)
@@ -584,7 +591,7 @@ public:
 	//--------------------------------------------------------------
 	void drawChannel2()
 	{
-		ofEnableDepthTest();
+		//ofEnableDepthTest();
 
 		// background color 
 		if (ENABLE_ColorBackground_2)
@@ -654,7 +661,7 @@ private:
 				// filter
 				if (name == ENABLE_Colors.getName())
 				{
-					bDISABLE_CALLBACKS = true;//too avoid crashes
+					bDISABLE_CALLBACKS = true;//to avoid crashes
 					ENABLE_BW = !ENABLE_Colors;
 					bDISABLE_CALLBACKS = false;
 				}
@@ -685,7 +692,10 @@ private:
 				}
 				else if (name == bReset.getName() && bReset)
 				{
+					bDISABLE_CALLBACKS = true;
 					bReset = false;
+					bDISABLE_CALLBACKS = false;
+
 					doReset();
 				}
 
@@ -714,10 +724,10 @@ private:
 		auto& gbw = gl.getGroup(params_BW.getName());
 		auto& gcol = gl.getGroup(params_Colors.getName());
 
-		auto& gPosG = gl.getGroup(position_Gui.getName());
+		auto& gPosG = ge.getGroup(position_Gui.getName());
 		gPosG.minimize();
 
-		auto& gPosO = gl.getGroup(position_Offset.getName());
+		auto& gPosO = ge.getGroup(position_Offset.getName());
 		gPosO.minimize();
 		
 		gl.minimize();
