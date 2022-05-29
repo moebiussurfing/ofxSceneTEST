@@ -25,20 +25,26 @@
 
 class ofxSceneTEST 
 {
+
 	// video hap
+
+#ifdef INCLUDE_HAP
 
 private:
 
-#ifdef INCLUDE_HAP
 	ofxHapPlayer player;
 #endif
 
+private:
+
 	// speed
+
 	int timer1 = 400;
 	int timer2 = 400;
 	int timer3 = 400;
 
 	// size
+
 	float max1 = 5;
 	float max2 = 5;
 	float max3 = 5;
@@ -64,27 +70,30 @@ public:
 		str2 = s;
 	}
 
-	// layers:
+	// Layers:
 
 private:
 
-	// background image
+	// Background image
 
 	ofImage myBackground;
 
-	// text
+	// Text
 
 	ofTrueTypeFont font;
 	int size;
 	int x, y;
 
-	// image
+	// Image
 
 	ofImage image;
 
 	//-
 
 	ofParameterGroup params{ "SCENE" };
+	ofParameterGroup params_Bg{ "BACKGROUND" };
+	ofParameterGroup params_Internal{ "INTERNAL" };
+	ofParameterGroup params_Translate{ "TRANSLATE" };
 
 	ofParameter<bool> ENABLE_BackgroundColor{ "GLOBAL BACKGROUND", false };
 	ofParameter<float> zoom{ "ZOOM", 1.0f, 0.5f, 10.f };
@@ -102,9 +111,9 @@ private:
 	ofParameter<bool> ENABLE_BW;
 	ofParameter<bool> bReset_BW;
 
-	ofParameterGroup params_SOURCES{ "SOURCES" };
+	ofParameterGroup params_Sources{ "SOURCES" };
 
-	ofParameterGroup params_Channel1{ "CHANNEL 1" };
+	ofParameterGroup params_Channel_1{ "CHANNEL 1" };
 	ofParameter<bool> ENABLE_ColorBackground_1;
 	ofParameter<bool> ENABLE_Image_1_1;
 	ofParameter<bool> ENABLE_Letters_1;
@@ -114,7 +123,7 @@ private:
 	ofParameter<bool> ENABLE_Video_1;
 #endif
 
-	ofParameterGroup params_Channel2{ "CHANNEL 2" };
+	ofParameterGroup params_Channel_2{ "CHANNEL 2" };
 	ofParameter<bool> ENABLE_ColorBackground_2;
 	ofParameter<bool> ENABLE_Image_2_1;
 	ofParameter<bool> ENABLE_Letters_2;
@@ -342,41 +351,41 @@ public:
 		ENABLE_Letters_1.set("LETTERS", false);
 		ENABLE_Image_1_2.set("IMAGE 2", false);
 
-		params_Channel1.add(ENABLE_ColorBackground_1);
-		params_Channel1.add(ENABLE_Image_1_1);
-		params_Channel1.add(ENABLE_Image_1_2);
+		params_Channel_1.add(ENABLE_ColorBackground_1);
+		params_Channel_1.add(ENABLE_Image_1_1);
+		params_Channel_1.add(ENABLE_Image_1_2);
 
 #ifdef INCLUDE_HAP
 		ENABLE_Video_1.set("VIDEO", false);
-		params_Channel1.add(ENABLE_Video_1);
+		params_Channel_1.add(ENABLE_Video_1);
 #endif
-		params_Channel1.add(ENABLE_Letters_1);
+		params_Channel_1.add(ENABLE_Letters_1);
 
 		ENABLE_ColorBackground_2.set("COLOR BACKGROUND", false);
 		ENABLE_Image_2_1.set("IMAGE 1", false);
 		ENABLE_Letters_2.set("LETTERS", true);
 		ENABLE_Image_2_2.set("IMAGE 2", false);
 
-		params_Channel2.add(ENABLE_ColorBackground_2);
-		params_Channel2.add(ENABLE_Image_2_1);
-		params_Channel2.add(ENABLE_Image_2_2);
+		params_Channel_2.add(ENABLE_ColorBackground_2);
+		params_Channel_2.add(ENABLE_Image_2_1);
+		params_Channel_2.add(ENABLE_Image_2_2);
 
 #ifdef INCLUDE_HAP
 		ENABLE_Video_2.set("VIDEO", false);
-		params_Channel2.add(ENABLE_Video_2);
+		params_Channel_2.add(ENABLE_Video_2);
 #endif
-		params_Channel2.add(ENABLE_Letters_2);
+		params_Channel_2.add(ENABLE_Letters_2);
 
 		//--
 		 
 		// Sources
-		params_SOURCES.add(bSmooth);
-		params_SOURCES.add(params_Channel1);
-		params_SOURCES.add(params_Channel2);
+		params_Sources.add(bSmooth);
+		params_Sources.add(params_Channel_1);
+		params_Sources.add(params_Channel_2);
 
 		//--
 
-		// all groups
+		// All Groups
 		params_Letters.add(ENABLE_Colors);
 		params_Letters.add(ENABLE_BW);
 		params_Letters.add(params_Colors);
@@ -385,21 +394,25 @@ public:
 		params.add(bCH1);
 		params.add(bCH2);
 
-		params.add(params_SOURCES);
+		params.add(params_Sources);
 
 		position_Gui.set("GUI POSITION",
 			glm::vec2(ofGetWidth() * 0.5f, ofGetHeight() * 0.05f),
 			glm::vec2(0, 0),
 			glm::vec2(ofGetWidth(), ofGetHeight()));
 
+		params_Bg.add(ENABLE_BackgroundColor);
+		params_Bg.add(cBg);
+		params_Translate.add(zoom);
+		params_Translate.add(position_Offset);
+		params_Internal.add(sourceIndex);
+		params_Internal.add(position_Gui);
+		params_Internal.add(bGui);
+
 		params_Extra.add(params_Letters);
-		params_Extra.add(ENABLE_BackgroundColor);
-		params_Extra.add(cBg);
-		params_Extra.add(zoom);
-		params_Extra.add(position_Offset);
-		params_Extra.add(sourceIndex);
-		params_Extra.add(position_Gui);
-		params_Extra.add(bGui);
+		params_Extra.add(params_Bg);
+		params_Extra.add(params_Translate);
+		params_Extra.add(params_Internal);
 		params_Extra.add(bReset);
 		params.add(params_Extra);
 
@@ -414,7 +427,7 @@ public:
 
 		//-
 
-		// auto call update and draw linked to ofApp
+		// Auto call update and draw linked to ofApp
 
 		ofAddListener(ofEvents().update, this, &ofxSceneTEST::update);
 		//ofAddListener(ofEvents().draw, this, &ofxSceneTEST::draw);
@@ -715,26 +728,19 @@ private:
 	void refreshGui()
 	{
 		// collapse groups
-		//gui.minimizeAll();
 		
 		auto& gsc = gui.getGroup(params.getName());
+		gsc.minimizeAll();
+
 		auto& ge = gsc.getGroup(params_Extra.getName());
 
 		auto& gl = ge.getGroup(params_Letters.getName());
 		auto& gbw = gl.getGroup(params_BW.getName());
 		auto& gcol = gl.getGroup(params_Colors.getName());
-
-		auto& gPosG = ge.getGroup(position_Gui.getName());
-		gPosG.minimize();
-
-		auto& gPosO = ge.getGroup(position_Offset.getName());
-		gPosO.minimize();
 		
 		gl.minimize();
-
 		gbw.minimize();
 		gcol.minimize();
-
 		if (ENABLE_Colors)
 		{
 			gbw.minimize();
@@ -746,9 +752,21 @@ private:
 			gbw.maximize();
 		}
 
-		auto& gs = gsc.getGroup(params_SOURCES.getName());
-		auto& gs1 = gs.getGroup(params_Channel1.getName());
-		auto& gs2 = gs.getGroup(params_Channel2.getName());
+		auto& gBg = ge.getGroup(params_Bg.getName());
+		auto& gTr = ge.getGroup(params_Translate.getName());
+		auto& gIt = ge.getGroup(params_Internal.getName());
+		gBg.minimize();
+		gTr.minimize();
+		gIt.minimize();
+		auto& gPosO = gTr.getGroup(position_Offset.getName());
+		gPosO.minimize();
+
+		auto& gPosG = gIt.getGroup(position_Gui.getName());
+		gPosG.minimize();
+
+		auto& gs = gsc.getGroup(params_Sources.getName());
+		auto& gs1 = gs.getGroup(params_Channel_1.getName());
+		auto& gs2 = gs.getGroup(params_Channel_2.getName());
 		gs1.minimize();
 		gs2.minimize();
 		if (bCH1) gs1.maximize();
