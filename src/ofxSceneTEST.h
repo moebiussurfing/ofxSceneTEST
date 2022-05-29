@@ -7,10 +7,10 @@
 ///
 //---------------------------------
 
-#define D_OFFSET 125//displace
-#define Z_MIN 1.18//zoom
+#define D_OFFSET 125 // displace
+#define Z_MIN 1.18 // zoom
 #define Z_MAX 9.0
-#define T_MIN 60//speed
+#define T_MIN 60 // speed
 #define T_MAX 240
 
 #ifdef INCLUDE_HAP
@@ -23,33 +23,38 @@
 #include "ofxSurfing_ofxGui.h"
 #include "ofxSurfingHelpers.h"
 
-class ofxSceneTEST : public ofBaseApp
+class ofxSceneTEST 
 {
-	//video hap
+	// video hap
+
 private:
+
 #ifdef INCLUDE_HAP
 	ofxHapPlayer player;
 #endif
 
-	//speed
+	// speed
 	int timer1 = 400;
 	int timer2 = 400;
 	int timer3 = 400;
 
-	//size
+	// size
 	float max1 = 5;
 	float max2 = 5;
 	float max3 = 5;
 
-	//gui
+	// gui
+
 private:
+
 	ofxPanel gui;
 	ofParameter<glm::vec2> position_Gui;
 
-	string str1 = "TEST\nofxFbo\nMixerBlend";
-	string str2 = "FBO\nMIXER\nBLENDER";
+	string str1 = "TEST \n ofxFbo \n MixerBlend";
+	string str2 = "FBO \n MIXER \n BLENDER";
 
 public:
+
 	//--------------------------------------------------------------
 	void setText1(string s) {
 		str1 = s;
@@ -59,18 +64,22 @@ public:
 		str2 = s;
 	}
 
-	//layers:
+	// layers:
+
 private:
 
-	//background image
+	// background image
+
 	ofImage myBackground;
 
-	//text
+	// text
+
 	ofTrueTypeFont font;
 	int size;
 	int x, y;
 
-	//image
+	// image
+
 	ofImage image;
 
 	//-
@@ -79,9 +88,10 @@ private:
 
 	ofParameter<bool> ENABLE_BackgroundColor{ "GLOBAL BACKGROUND", false };
 	ofParameter<float> zoom{ "ZOOM", 1.0f, 0.5f, 10.f };
-	ofParameter<glm::vec2> posOffset{ "POSITION OFFSET", glm::vec2(0), glm::vec2(-1920), glm::vec2(1920) };
+	ofParameter<glm::vec2> position_Offset{ "POSITION OFFSET", glm::vec2(0), glm::vec2(-1920), glm::vec2(1920) };
 
 	ofParameterGroup params_Letters{ "LETTERS" };
+	ofParameterGroup params_Extra{ "EXTRA" };
 	ofParameterGroup params_Colors{ "COLORS" };
 	ofParameter<ofColor> c1, c2, cBg;
 	ofParameter<bool> ENABLE_randomizeColors;
@@ -90,7 +100,7 @@ private:
 	ofParameterGroup params_BW{ "BW" };
 	ofParameter<ofColor> cBlack, cWhite;
 	ofParameter<bool> ENABLE_BW;
-	ofParameter<bool> RESET_BW;
+	ofParameter<bool> bReset_BW;
 
 	ofParameterGroup params_SOURCES{ "SOURCES" };
 
@@ -99,6 +109,7 @@ private:
 	ofParameter<bool> ENABLE_Image_1_1;
 	ofParameter<bool> ENABLE_Letters_1;
 	ofParameter<bool> ENABLE_Image_1_2;
+
 #ifdef INCLUDE_HAP
 	ofParameter<bool> ENABLE_Video_1;
 #endif
@@ -108,6 +119,7 @@ private:
 	ofParameter<bool> ENABLE_Image_2_1;
 	ofParameter<bool> ENABLE_Letters_2;
 	ofParameter<bool> ENABLE_Image_2_2;
+
 #ifdef INCLUDE_HAP
 	ofParameter<bool> ENABLE_Video_2;
 #endif
@@ -123,8 +135,12 @@ private:
 	ofParameter<bool> bCH1{ "CH1", true };
 	ofParameter<bool> bCH2{ "CH2", true };
 
-	ofParameter<int> sourceIndex{ "Force Source", 0, 0, 4 };// select what channel to draw whan drawAll is called
-	ofParameter<bool> bSmooth{ "Smooth", true };
+	// Select what channel to draw when drawAll() is called
+	// 0 = standard : all!
+	ofParameter<int> sourceIndex{ "Force Source", 0, 0, 4 };
+	
+	ofParameter<bool> bSmooth{ "SMOOTH", true };
+	ofParameter<bool> bReset{ "RESET",false };
 
 public:
 
@@ -145,38 +161,17 @@ public:
 		return bGui.get();
 	}
 
-	//--------------------------------------------------------------
-	void refreshGui()
-	{
-		gui.maximizeAll();
-		auto& gScn = gui.getGroup("SCENE");
-		auto& gSrc = gScn.getGroup("SOURCES");
-		auto& ch1 = gSrc.getGroup("CHANNEL 1");
-		auto& ch2 = gSrc.getGroup("CHANNEL 2");
-		//gSrc.minimize();
-		ch2.minimize();
-
-		auto& gLtr = gScn.getGroup("LETTERS");
-		auto& Col = gLtr.getGroup("COLORS");
-		auto& Bw = gLtr.getGroup("BW");
-		Bw.minimize();
-		gLtr.minimize();
-
-		auto& gGuiPos = gScn.getGroup("GUI POSITION");
-		gGuiPos.minimize();
-	}
 
 	//--------------------------------------------------------------
 	ofxSceneTEST()
 	{
 		ofSetLogLevel("ofxSceneTEST", OF_LOG_NOTICE);
-		//ofSetLogLevel("ofxSceneTEST", OF_LOG_VERBOSE);
 
-		//path for settings
+		// path for settings
 		path_GLOBAL = "ofxSceneTEST/";
 
 		//out of global folder
-		path_Params = path_GLOBAL + "scene.xml";
+		path_Params = path_GLOBAL + "ofxSceneTEST.xml";
 
 		ofAddListener(ofEvents().keyPressed, this, &ofxSceneTEST::keyPressed);
 
@@ -188,19 +183,56 @@ public:
 	//--------------------------------------------------------------
 	~ofxSceneTEST()
 	{
-		//remove params callbacks listeners
+		// remove params callbacks listeners
 		ofRemoveListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
 
-		//get gui position before save
+		// get gui position before save
 		position_Gui = glm::vec2(gui.getPosition());
 
-
-		//settings
+		// settings
 		saveParams(params, path_Params);
 
 		ofRemoveListener(ofEvents().keyPressed, this, &ofxSceneTEST::keyPressed);
 
-		//exit();
+		ofRemoveListener(ofEvents().update, this, &ofxSceneTEST::update);
+		//ofRemoveListener(ofEvents().draw, this, &ofxSceneTEST::draw);
+	}
+
+	//--------------------------------------------------------------
+	void doReset()
+	{
+		cBg.set(ofColor(32, 255));
+
+		ENABLE_Colors = true;
+		ENABLE_randomizeColors = false;
+
+		c1.set(ofColor(64, 255));
+		c2.set(ofColor(128, 255));
+		cBlack.set(ofColor(0, 255));
+		cWhite.set(ofColor(255, 255));
+
+		ENABLE_BW = false;
+		ENABLE_ColorBackground_1 = true;
+
+		ENABLE_Image_1_1 = true;
+		ENABLE_Letters_1 = false;
+		ENABLE_Image_1_2 = false;
+
+		ENABLE_Image_2_1 = false;
+		ENABLE_Letters_2 = true;
+		ENABLE_Image_2_2 = false;
+
+		bGui = true;
+		bCH1 = false;
+		bCH2 = true;
+
+		bSmooth = false;
+		sourceIndex = 0;
+
+		zoom = 1;
+		position_Offset = glm::vec2(0, 0);
+
+		refreshGui();
 	}
 
 	//--------------------------------------------------------------
@@ -209,21 +241,11 @@ public:
 		const int& key = eventArgs.key;
 		ofLogNotice(__FUNCTION__) << "'" << (char)key << "' \t\t[" << key << "]";
 
-		////modifiers
-		//bool mod_COMMAND = eventArgs.hasModifier(OF_KEY_COMMAND);
-		//bool mod_CONTROL = eventArgs.hasModifier(OF_KEY_CONTROL);
-		//bool mod_ALT = eventArgs.hasModifier(OF_KEY_ALT);
-		//bool mod_SHIFT = eventArgs.hasModifier(OF_KEY_SHIFT);
-		//if (false)
-		//{
-		//	ofLogNotice(__FUNCTION__) << "mod_COMMAND: " << (mod_COMMAND ? "ON" : "OFF");
-		//	ofLogNotice(__FUNCTION__) << "mod_CONTROL: " << (mod_CONTROL ? "ON" : "OFF");
-		//	ofLogNotice(__FUNCTION__) << "mod_ALT: " << (mod_ALT ? "ON" : "OFF");
-		//	ofLogNotice(__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
-		//}
 
-		//gui
-		if (key == 'S')
+
+		// Gui
+
+		if (key == 'G')
 		{
 			setToggleGuiVisible();
 		}
@@ -240,37 +262,12 @@ public:
 
 		//-
 
-		////ofxGui theme
-		////string pathFontGui = path_GLOBAL + "fonts/overpass-mono-bold.otf";
-		//string pathFontGui = "assets/fonts/overpass-mono-bold.otf";
-		//ofFile file(pathFontGui);
-		//if (file.exists())
-		//{
-		//	ofLogNotice(__FUNCTION__) << "ofxGui theme: LOADED FONT FILE '" << pathFontGui << "'";
-		//	ofxGuiSetFont(pathFontGui, 9);
-		//}
-		//else
-		//{
-		//	ofLogError(__FUNCTION__) << "ofxGui theme: FONT FILE '" << pathFontGui << "' NOT FOUND!";
-		//	font.load(OF_TTF_SANS, size, true, true);
-		//}
-		//ofxGuiSetDefaultHeight(20);
-		//ofxGuiSetBorderColor(32);
-		//ofxGuiSetFillColor(ofColor(48));
-		//ofxGuiSetTextColor(ofColor::white);
-		//ofxGuiSetHeaderColor(ofColor(24));
+		// Layers
 
-		//-
-
-		//layers
-
-		//ttf font
+		// ttf font
 		string pathFont;
-		//pathFont = path_GLOBAL + "fonts/Sequel100Black116.ttf";
-		pathFont = "assets/fonts/Sequel100Black116.ttf";
-		//pathFont = path_GLOBAL + "fonts/DSPTRLSuper.ttf"; size = 90;
-		//pathFont = path_GLOBAL + "fonts/overpass-mono-bold.otf";size = 100;
-		size = 60;
+		pathFont = "assets/fonts/Sequel100Black116.ttf"; size = 60;
+		
 		bool bLoaded = font.load(pathFont, size, true, true);
 		if (bLoaded)
 		{
@@ -283,26 +280,33 @@ public:
 		}
 		font.setLineHeight(size + 5);
 
-		//-
+		//--
 
-		//background
+		// Background
+
 		string pathBg;
 		pathBg = "image1.jpg";
-		//pathBg = "image2.jpg";
+
 		myBackground.load(path_GLOBAL + pathBg);
 
-		//image
+		//--
+
+		// Image
+
 		string pathImg = path_GLOBAL + "image2.jpg";;
 		image.load(pathImg);
 
-		//video hap
+		//--
+
+		// Video hap
+
 #ifdef INCLUDE_HAP
 		string str = "movies";
 		loadVideo(path_GLOBAL + str + "/" + "SampleHap.mov");
 		player.setLoopState(OF_LOOP_NORMAL);
 #endif
 
-		//-
+		//--
 
 		cBg.set("BACKGROUND COLOR", ofColor(128, 255), ofColor(0, 0), ofColor(255, 255));
 
@@ -315,15 +319,17 @@ public:
 		params_Colors.add(ENABLE_randomizeColors);
 
 		ENABLE_BW.set("MODE BW", false);
-		RESET_BW.set("RESET", false);
-		RESET_BW.setSerializable(false);
+		bReset_BW.set("RESET BW", false);
+		bReset_BW.setSerializable(false);
 		cBlack.set("BLACK", ofColor(0, 255), ofColor(0, 0), ofColor(255, 255));
 		cWhite.set("WHITE", ofColor(255, 255), ofColor(0, 0), ofColor(255, 255));
 		cBlack.setSerializable(false);
 		cWhite.setSerializable(false);
-		params_BW.add(RESET_BW);
+		params_BW.add(bReset_BW);
 		params_BW.add(cBlack);
 		params_BW.add(cWhite);
+
+		//--
 
 		ENABLE_ColorBackground_1.set("COLOR BACKGROUND", false);
 		ENABLE_Image_1_1.set("IMAGE 1", true);
@@ -333,12 +339,12 @@ public:
 		params_Channel1.add(ENABLE_ColorBackground_1);
 		params_Channel1.add(ENABLE_Image_1_1);
 		params_Channel1.add(ENABLE_Image_1_2);
+
 #ifdef INCLUDE_HAP
 		ENABLE_Video_1.set("VIDEO", false);
 		params_Channel1.add(ENABLE_Video_1);
 #endif
 		params_Channel1.add(ENABLE_Letters_1);
-		params_SOURCES.add(params_Channel1);
 
 		ENABLE_ColorBackground_2.set("COLOR BACKGROUND", false);
 		ENABLE_Image_2_1.set("IMAGE 1", false);
@@ -348,14 +354,23 @@ public:
 		params_Channel2.add(ENABLE_ColorBackground_2);
 		params_Channel2.add(ENABLE_Image_2_1);
 		params_Channel2.add(ENABLE_Image_2_2);
+
 #ifdef INCLUDE_HAP
 		ENABLE_Video_2.set("VIDEO", false);
 		params_Channel2.add(ENABLE_Video_2);
 #endif
 		params_Channel2.add(ENABLE_Letters_2);
+
+		//--
+		 
+		// Sources
+		params_SOURCES.add(bSmooth);
+		params_SOURCES.add(params_Channel1);
 		params_SOURCES.add(params_Channel2);
 
-		//all groups
+		//--
+
+		// all groups
 		params_Letters.add(ENABLE_Colors);
 		params_Letters.add(ENABLE_BW);
 		params_Letters.add(params_Colors);
@@ -364,54 +379,54 @@ public:
 		params.add(bCH1);
 		params.add(bCH2);
 
-		params.add(zoom);
-		params.add(posOffset);
 		params.add(params_SOURCES);
-		params.add(params_Letters);
 
-		params.add(ENABLE_BackgroundColor);
-		params.add(cBg);
-
-		params.add(bGui);
 		position_Gui.set("GUI POSITION",
 			glm::vec2(ofGetWidth() * 0.5f, ofGetHeight() * 0.05f),
 			glm::vec2(0, 0),
 			glm::vec2(ofGetWidth(), ofGetHeight()));
-		//position_Gui = glm::vec2(ofGetWindowWidth() - 210, 5);
-		params.add(position_Gui);
 
-		params.add(sourceIndex);
-		params.add(bSmooth);
+		params_Extra.add(params_Letters);
+		params_Extra.add(ENABLE_BackgroundColor);
+		params_Extra.add(cBg);
+		params_Extra.add(zoom);
+		params_Extra.add(position_Offset);
+		params_Extra.add(sourceIndex);
+		params_Extra.add(position_Gui);
+		params_Extra.add(bGui);
+		params_Extra.add(bReset);
+		params.add(params_Extra);
 
 		ofAddListener(params.parameterChangedE(), this, &ofxSceneTEST::Changed_params);
 
-		//-
+		//--
 
-		//gui
+		// Gui
+
 		gui.setup("ofxSceneTEST");
 		gui.add(params);
 
-		//default gui pos
-		gui.setPosition(position_Gui->x, position_Gui->y);
-
-		//collapse
-		//gui.getGroup("SCENE").minimize();
-		refreshGui();
-
 		//-
 
-		//auto call update and draw linked to ofApp
+		// auto call update and draw linked to ofApp
+
 		ofAddListener(ofEvents().update, this, &ofxSceneTEST::update);
-		ofAddListener(ofEvents().draw, this, &ofxSceneTEST::draw);
+		//ofAddListener(ofEvents().draw, this, &ofxSceneTEST::draw);
 
 		//--
 
-		//startup
+		// Startup
 
-
-		//settings
+		// settings
 		loadParams(params, path_Params);
 		//could crash if group vars structure, or name params are modified
+
+		// default gui pos
+		gui.setPosition(position_Gui->x, position_Gui->y);
+
+		// collapse
+		//gui.minimizeAll();
+		refreshGui();
 
 		//TODO: crashes if moved ber load
 		bDISABLE_CALLBACKS = false;
@@ -422,78 +437,81 @@ public:
 	{
 		//ofLogVerbose(__FUNCTION__) << "called update";
 	}
-
 	//--------------------------------------------------------------
-	void draw(ofEventArgs& args)
+	void drawGui()
 	{
-		////ofEnableDepthTest();
-
 		if (bGui)
 		{
 			//ofLogVerbose(__FUNCTION__) << "called draw";
 
 			//in text mode
-			if (ENABLE_Letters_1 || ENABLE_Letters_2)
-			{
-				int r = 20;
-				int x, y;
+			bool bDrawColorCircles = false;
+			if (bDrawColorCircles)
+				if (ENABLE_Letters_1 || ENABLE_Letters_2)
+				{
+					int r = 20;
+					int x, y;
 
-				//left to the gui
-				//x = position_Gui->x - r -10;
-				//y = position_Gui->y + 2 * r + 125;
+					//left to the gui
+					//x = position_Gui->x - r -10;
+					//y = position_Gui->y + 2 * r + 125;
 
-				//below the gui
-				int xPad = 20;
-				int yPad = 10;
-				ofRectangle wr = gui.getShape();
-				x = wr.getBottomLeft().x + r + xPad;
-				y = wr.getBottomLeft().y + r + yPad;
+					//below the gui
+					int xPad = 20;
+					int yPad = 10;
+					ofRectangle wr = gui.getShape();
+					x = wr.getBottomLeft().x + r + xPad;
+					y = wr.getBottomLeft().y + r + yPad;
 
-				//debug the 2 original colors (without blending)
-				//draw 2 circles filled by colors 1 and 2
-				ofPushStyle();
-				ofFill();
+					//debug the 2 original colors (without blending)
+					//draw 2 circles filled by colors 1 and 2
+					ofPushStyle();
+					ofFill();
 
-				//1st line
-				if (ENABLE_BW)
-					ofSetColor(cBlack);
-				else
-					ofSetColor(c1);
+					//1st line
+					if (ENABLE_BW) ofSetColor(cBlack);
+					else ofSetColor(c1);
 
-				ofDrawCircle(x, y, r);
+					ofDrawCircle(x, y, r);
 
-				//2nd line
-				if (ENABLE_BW)
-					ofSetColor(cWhite);
-				else
-					ofSetColor(c2);
+					//2nd line
+					if (ENABLE_BW) ofSetColor(cWhite);
+					else ofSetColor(c2);
 
-				//ofDrawCircle(x, y + 2.2f * r, r);//vertical aligned
-				ofDrawCircle(x + 2.2f * r, y, r);//horizontal aligned
+					//ofDrawCircle(x, y + 2.2f * r, r);//vertical aligned
+					ofDrawCircle(x + 2.2f * r, y, r);//horizontal aligned
 
-				ofPopStyle();
-			}
+					ofPopStyle();
+				}
 
 			//--
-	//--
 
-	////TEST: 
-	////ofApp background switcher to debug
-	//int timer = 60;
-	//int frame = ofGetFrameNum() % timer;
-	//bool b = ((frame < timer*0.5) ? true : false);
-	//if (b)
-	//	ofBackground(ofColor::yellow);
-	//else
-	//	ofBackground(ofColor::green);
+			////TEST: 
+			////ofApp background switcher to debug
+			//int timer = 60;
+			//int frame = ofGetFrameNum() % timer;
+			//bool b = ((frame < timer*0.5) ? true : false);
+			//if (b)
+			//	ofBackground(ofColor::yellow);
+			//else
+			//	ofBackground(ofColor::green);
 
-	//-
+			//--
+
 			ofDisableDepthTest();
 
 			//scene
 			gui.draw();
 		}
 	}
+
+	// auto draw
+	////--------------------------------------------------------------
+	//void draw(ofEventArgs& args)
+	//{
+	//	drawGui();
+	//	////ofEnableDepthTest();
+	//}
 
 	//--------------------------------------------------------------
 	void drawBackground()
@@ -510,6 +528,8 @@ public:
 	//--------------------------------------------------------------
 	void drawAll()
 	{
+		//ofEnableAlphaBlending();
+
 		if (sourceIndex == 0)
 		{
 			if (ENABLE_BackgroundColor) drawBackground();
@@ -528,31 +548,31 @@ public:
 	{
 		ofEnableDepthTest();
 
-		//background color 
+		// background color 
 		if (ENABLE_ColorBackground_1)
 		{
 			drawLayer(LAYER_BACKGROUND_COLOR);
 		}
 
-		//text
+		// text
 		if (ENABLE_Letters_1)
 		{
 			drawLayer(LAYER_LETTERS);
 		}
 
-		//background image
+		// background image
 		if (ENABLE_Image_1_1)
 		{
 			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
 
-		//image
+		// image
 		if (ENABLE_Image_1_2)
 		{
 			drawLayer(LAYER_IMAGE);
 		}
 
-		//video hap
+		// video hap
 #ifdef INCLUDE_HAP
 		if (ENABLE_Video_1)
 		{
@@ -566,37 +586,37 @@ public:
 	{
 		ofEnableDepthTest();
 
-		//background color 
+		// background color 
 		if (ENABLE_ColorBackground_2)
 		{
 			drawLayer(LAYER_BACKGROUND_COLOR);
 		}
 
-		//text
+		// text
 		if (ENABLE_Letters_2)
 		{
 			drawLayer(LAYER_LETTERS);
 		}
 
-		//color background image
+		// color background image
 		if (ENABLE_Image_2_1)
 		{
 			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
 
-		//image background
+		// image background
 		if (ENABLE_Image_2_1)
 		{
 			drawLayer(LAYER_BACKGROUND_IMAGE);
 		}
 
-		//image
+		// image
 		if (ENABLE_Image_2_2)
 		{
 			drawLayer(LAYER_IMAGE);
 		}
 
-		//video hap
+		// video hap
 #ifdef INCLUDE_HAP
 		if (ENABLE_Video_2)
 		{
@@ -612,7 +632,6 @@ public:
 		ENABLE_BW = !ENABLE_BW;
 		ENABLE_Colors = !ENABLE_BW;
 		bDISABLE_CALLBACKS = false;
-		updateGui();
 	}
 
 	//--------------------------------------------------------------
@@ -629,41 +648,34 @@ private:
 		{
 			string name = e.getName();
 
-			//exclude debugs
-			if (name != "exclude"
-				&& name != "exclude"
-				&& name != "RANDOMIZER"
-				)
 			{
-				ofLogNotice(__FUNCTION__) << "Changed_params: " << name << " : " << e;
+				ofLogNotice(__FUNCTION__) << " " << name << " : " << e;
 
-				//filter
-				if (name == "MODE COLORS")
+				// filter
+				if (name == ENABLE_Colors.getName())
 				{
 					bDISABLE_CALLBACKS = true;//too avoid crashes
 					ENABLE_BW = !ENABLE_Colors;
-					updateGui();
 					bDISABLE_CALLBACKS = false;
 				}
-				else if (name == "MODE BW")
+				else if (name == ENABLE_BW.getName())
 				{
 					bDISABLE_CALLBACKS = true;
 					ENABLE_Colors = !ENABLE_BW;
-					updateGui();
 					bDISABLE_CALLBACKS = false;
 				}
-				else if (name == "RESET")
+				else if (name == bReset_BW.getName())
 				{
-					if (RESET_BW)
+					if (bReset_BW)
 					{
 						bDISABLE_CALLBACKS = true;
-						RESET_BW = false;
+						bReset_BW = false;
 						cBlack = ofColor(0, 255);
 						cWhite = ofColor(255, 255);
 						bDISABLE_CALLBACKS = false;
 					}
 				}
-				else if (name == "GUI POSITION")
+				else if (name == position_Gui.getName())
 				{
 					position_Gui = glm::vec2(
 						MIN(position_Gui.get().x, ofGetWidth() - 210),
@@ -671,38 +683,68 @@ private:
 
 					gui.setPosition(position_Gui->x, position_Gui->y);
 				}
+				else if (name == bReset.getName() && bReset)
+				{
+					bReset = false;
+					doReset();
+				}
 
-				//-
-
-				////whorkflow
-				//if (!ENABLE_BW && !ENABLE_Colors)
-				//	ENABLE_Colors = true;//default
-				//updateGui();
+				else if (name == bCH1.getName())
+				{
+					refreshGui();
+				}
+				else if (name == bCH2.getName())
+				{
+					refreshGui();
+				}
 			}
 		}
 	}
 
 	//--------------------------------------------------------------
-	void updateGui()
+	void refreshGui()
 	{
-		//collapse groups
-		auto& g0 = gui.getGroup("SCENE");//1st level
-		auto& g1 = g0.getGroup("LETTERS");//1st level
-		auto& g11 = g1.getGroup("BW");//2nd level
-		auto& g12 = g1.getGroup("COLORS");//2nd level
-		g11.minimize();
-		g12.minimize();
+		// collapse groups
+		//gui.minimizeAll();
+		
+		auto& gsc = gui.getGroup(params.getName());
+		auto& ge = gsc.getGroup(params_Extra.getName());
+
+		auto& gl = ge.getGroup(params_Letters.getName());
+		auto& gbw = gl.getGroup(params_BW.getName());
+		auto& gcol = gl.getGroup(params_Colors.getName());
+
+		auto& gPosG = gl.getGroup(position_Gui.getName());
+		gPosG.minimize();
+
+		auto& gPosO = gl.getGroup(position_Offset.getName());
+		gPosO.minimize();
+		
+		gl.minimize();
+
+		gbw.minimize();
+		gcol.minimize();
 
 		if (ENABLE_Colors)
 		{
-			g11.minimize();
-			g12.maximize();
+			gbw.minimize();
+			gcol.maximize();
 		}
 		if (ENABLE_BW)
 		{
-			g12.minimize();
-			g11.maximize();
+			gcol.minimize();
+			gbw.maximize();
 		}
+
+		auto& gs = gsc.getGroup(params_SOURCES.getName());
+		auto& gs1 = gs.getGroup(params_Channel1.getName());
+		auto& gs2 = gs.getGroup(params_Channel2.getName());
+		gs1.minimize();
+		gs2.minimize();
+		if (bCH1) gs1.maximize();
+		if (bCH2) gs2.maximize();
+
+		ge.minimize();
 	}
 
 	//--------------------------------------------------------------
@@ -768,7 +810,7 @@ private:
 
 private:
 
-	//scene design
+	// scene design
 	//--------------------------------------------------------------
 	enum LAYER_Type
 	{
@@ -785,9 +827,9 @@ private:
 	void drawLayer(int layerType)
 	{
 		ofPushMatrix();
-		ofTranslate(posOffset.get());
+		ofTranslate(position_Offset.get());
 		//ofTranslate(-ofGetWidth() * zoom - 1, -ofGetHeight() * zoom - 1);
-		//ofTranslate(posOffset.get().x,posOffset.get().y, -1);
+		//ofTranslate(position_Offset.get().x,position_Offset.get().y, -1);
 		ofScale(zoom);
 
 		int xOffset, yOffset;
@@ -796,9 +838,7 @@ private:
 
 		switch (layerType)
 		{
-
-			//-----------------
-
+		
 		case LAYER_BACKGROUND_COLOR:
 		{
 			drawBackground();
@@ -829,21 +869,22 @@ private:
 
 				ofPushMatrix();
 				{
-					const int MAX_X = 100;
-					const int MAX_Y = 200;
-					const float MAX_S = 1.02f;
-					const float noiseAmnt = 0.07f;
-					float scale = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 1, MAX_S);
-					float noise = ofMap(ofxSurfingHelpers::Noise(), -1, 1, -noiseAmnt, noiseAmnt);
-					int xOffset = scale * MAX_X;
-					int yOffset = scale * MAX_Y;
-					ofTranslate(xOffset, 0);
+					if (!bSmooth) {
+						const int MAX_X = 100;
+						const int MAX_Y = 200;
+						const float MAX_S = 1.02f;
+						const float noiseAmnt = 0.07f;
+						float scale = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 1, MAX_S);
+						float noise = ofMap(ofxSurfingHelpers::Noise(), -1, 1, -noiseAmnt, noiseAmnt);
+						int xOffset = scale * MAX_X;
+						int yOffset = scale * MAX_Y;
+						ofTranslate(xOffset, 0);
 
-					ofScale(scale + noise);
+						ofScale(scale + noise);
+					}
 
 					//draw
 					image.draw(-xHalf, -yHalf, ofGetWidth(), ofGetHeight());
-
 				}
 				ofPopMatrix();
 			}
@@ -866,7 +907,6 @@ private:
 		}
 		break;
 
-		//-----------------
 		case LAYER_LETTERS:
 		{
 			//two text lines
@@ -915,14 +955,17 @@ private:
 				if (ENABLE_BW) ofSetColor(cBlack);
 				else ofSetColor(c1);
 
-				const float noiseAmnt = 0.7f;
-				float scale = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 1, 1.08f);
-				float noise = ofMap(ofxSurfingHelpers::Noise(), -1, 1, -noiseAmnt, noiseAmnt);
-				float xOffset = noise * 200;
-				float vOffset = noise * 200;
-				ofScale(scale + noise);
-				x += xOffset - 50;
-				y -= vOffset - 70;
+				if (!bSmooth) {
+					const float noiseAmnt = 0.7f;
+					float scale = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 1, 1.08f);
+					float noise = ofMap(ofxSurfingHelpers::Noise(), -1, 1, -noiseAmnt, noiseAmnt);
+					float xOffset = noise * 200;
+					float vOffset = noise * 200;
+					ofScale(scale + noise);
+
+					x += xOffset - 50;
+					y -= vOffset - 70;
+				}
 
 				font.drawString(str1, x, y);
 
@@ -932,8 +975,10 @@ private:
 				if (ENABLE_BW) ofSetColor(cWhite);
 				else ofSetColor(c2);
 
-				float noise2 = ofMap(ofxSurfingHelpers::Noise(), 2, 0.1f, -noiseAmnt, noiseAmnt);
-				y -= noise2 * 100;
+				if (!bSmooth) {
+					float noise2 = ofMap(ofxSurfingHelpers::Noise(), 2, 0.1f, -noiseAmnt, noiseAmnt);
+					y -= noise2 * 100;
+				}
 
 				font.drawString(str2, x, y + _h + 10);
 			}
@@ -944,7 +989,6 @@ private:
 		}
 		break;
 
-		//-----------------
 		case LAYER_IMAGE:
 		{
 			ofPushMatrix();
@@ -977,20 +1021,15 @@ private:
 		break;
 
 #ifdef INCLUDE_HAP
-		//-----------------
 		case LAYER_VIDEO:
 		{
 			drawVideo();
 		}
 		break;
 #endif
-
-		//-----------------
-		default:
-			break;
 		}
 
 		ofPopMatrix();
 	}
-};
+		};
 

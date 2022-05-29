@@ -1,12 +1,14 @@
 ## Description
-Fast&Easy scene drawer (2D image layers with slow/random movement).  
+Fast & Easy scene drawer (2D image layers with slow/random movement).  
 I use this as source to **TEST** and make other addons, or to do some image processing.
 
-## Screenshot
+## Screenshots
+
 */example*  
-![image](/readme_images/Capture.JPG?raw=true "image")  
+![](/readme_images/Capture.JPG)  
+
 *In another project:*  
-![image](/readme_images/Capture1.JPG?raw=true "image")  
+![](/readme_images/Capture1.JPG)  
 
 ## Overview
 This addon easily draws a scene with two independent layers of these enabled or disabled 'draw types':
@@ -17,43 +19,38 @@ This addon easily draws a scene with two independent layers of these enabled or 
 - Video (requires ofxHapPlayer and add ```#define INCLUDE_HAP``` and the addon.)
 
 *The addon does not make any layer Blending/Mixing.* 
-* Check the ```/bin/data``` files: 2 images and 1 font.
+- Check the ```/bin/data``` files: 2 images and 1 font in assets.
 
 ## Dependecies
-* ofxSurfingHelpers: Only for small ofxGui theming. Can be removed easy.
+* [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers): Only for small **ofxGui(()) theming. Can be removed easely.
 
 ## Features
 - GUI to Tweak settings.
 - Auto Save/Load settings.
 
 ## Usage
-Look the example: ```/example```
+Look example.
 
 ### ofApp.h
 ```c++
 #include "ofxSceneTEST.h"
-
 ofxSceneTEST scene;
 ```
 
 ### ofApp.cpp
 ```c++
-// allows draw all channels but draws the selected by "Force Source" slider:
+// Allows draw all channels 
+// but draws the selected by "Force Source" slider:
 // (0 is for all. any other to solo each layer.)
 scene.drawAll();
+
+// Independent channels:
+//scene.drawChannel1();// draw 1st layer
+//scene.drawChannel2();// draw 2nd layer
 
 // nothing more !
 
 //--
 
-// independent channels:
-//scene.drawChannel1();// draw 1st layer
-//scene.drawChannel2();// draw 2nd layer
-
-//-
-
-// more:
-//scene.setGuiVisible(!scene.getGuiVisible());
-//scene.setModeColorsToggle();
-//scene.setModeRandomizeToggle();
+scene.drawGui();
 ```
