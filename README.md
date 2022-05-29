@@ -11,7 +11,7 @@ I use this as source to **TEST** and make other addons, or to do some image proc
 ![](/readme_images/Capture1.JPG)  
 
 ## Overview
-This addon easily draws a scene with two independent layers of these enabled or disabled 'draw types':
+This add-on easily draws a scene with two independent layers of these enabled or disabled 'draw types':
 
 - Image 1 (background)
 - Image 2 (image)
@@ -22,7 +22,7 @@ This addon easily draws a scene with two independent layers of these enabled or 
 - Check the ```/bin/data``` files: 2 images and 1 font in assets.
 
 ## Dependecies
-* [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers): Only for small **ofxGui(()) theming. Can be removed easely.
+* [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers): Only for small **ofxGui** theming and example. Can be removed easely.
 
 ## Features
 - GUI to Tweak settings.
@@ -34,21 +34,22 @@ Look example.
 ### ofApp.h
 ```c++
 #include "ofxSceneTEST.h"
+
 ofxSceneTEST scene;
 ```
 
 ### ofApp.cpp
 ```c++
-// Allows draw all channels 
-// but draws the selected by "Force Source" slider:
-// (0 is for all. any other to solo each layer.)
+// Draws all channels: 
+// but the selected by "Force Source" slider:
+// (0 is for all. Any other - 1, 2, 3 - makes solo each layer.)
 scene.drawAll();
 
-// Independent channels:
-//scene.drawChannel1();// draw 1st layer
-//scene.drawChannel2();// draw 2nd layer
+// Draws Independent channels:
+//scene.drawChannel1();// draw 1st Channel
+//scene.drawChannel2();// draw 2nd Channel
 
-// nothing more !
+// Nothing more !
 
 //--
 
