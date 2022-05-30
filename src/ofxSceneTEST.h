@@ -140,6 +140,7 @@ private:
 
 	bool bDISABLE_CALLBACKS;
 
+	ofParameter<bool> bSoloCH{ "SOLO CH", true };
 	ofParameter<bool> bCH1{ "CH1", true };
 	ofParameter<bool> bCH2{ "CH2", true };
 
@@ -242,6 +243,7 @@ public:
 
 		bCH1 = false;
 		bCH2 = true;
+		bSoloCH = true;
 
 		//bGui = true;
 		
@@ -256,11 +258,9 @@ public:
 		const int& key = eventArgs.key;
 		ofLogNotice(__FUNCTION__) << "'" << (char)key << "' \t\t[" << key << "]";
 
-
-
 		// Gui
 
-		if (key == 'G')
+		if (key == 'S')
 		{
 			setToggleGuiVisible();
 		}
@@ -299,8 +299,7 @@ public:
 
 		// Background
 
-		string pathBg;
-		pathBg = "image1.jpg";
+		string pathBg = "image1.jpg";
 
 		myBackground.load(path_GLOBAL + pathBg);
 
@@ -393,6 +392,7 @@ public:
 
 		params.add(bCH1);
 		params.add(bCH2);
+		params.add(bSoloCH);
 
 		params.add(params_Sources);
 
@@ -714,10 +714,20 @@ private:
 
 				else if (name == bCH1.getName())
 				{
+					if (bSoloCH) {
+						if (bCH1) bCH2 = false;
+						else if (bCH2) bCH1 = false;
+					}
+
 					refreshGui();
 				}
 				else if (name == bCH2.getName())
 				{
+					if (bSoloCH) {
+						if (bCH2) bCH1 = false;
+						else if (bCH1) bCH2 = false;
+					}
+
 					refreshGui();
 				}
 			}
@@ -727,11 +737,18 @@ private:
 	//--------------------------------------------------------------
 	void refreshGui()
 	{
+		if (bSoloCH) {
+			if (bCH1) bCH2 = false;
+			else if (bCH2) bCH1 = false;
+		}
+
+		//--
+		
 		// collapse groups
 		
 		auto& gsc = gui.getGroup(params.getName());
-		gsc.minimizeAll();
-
+		//gsc.minimizeAll();
+		
 		auto& ge = gsc.getGroup(params_Extra.getName());
 
 		auto& gl = ge.getGroup(params_Letters.getName());
